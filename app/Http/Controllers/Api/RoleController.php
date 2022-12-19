@@ -8,6 +8,7 @@ use App\Http\Requests\Permissions\Roles\UpdateRoleRequest;
 use App\Traits\Jsonify;
 use Spatie\Permission\Models\Role;
 use App\Http\Resources\Collections\Permissions\RolesCollection;
+use App\Http\Resources\Permissions\RoleResource;
 use App\Services\Permissions\RoleService;
 use Exception;
 
@@ -44,7 +45,7 @@ class RoleController extends Controller
 
     public function show(Role $role)
     {
-        return self::jsonSuccess(message: 'Roles retreived successfully.', data: $role->load('permissions'));
+        return self::jsonSuccess(message: 'Roles retreived successfully.', data: new RoleResource($role->load('permissions')));
     }
 
     public function update(UpdateRoleRequest $request, Role $role)

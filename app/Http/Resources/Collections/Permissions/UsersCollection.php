@@ -10,7 +10,7 @@ class UsersCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'users' => UserResource::collection($this->whenLoaded('permissions')),
+            'users' => UserResource::collection($this->collection),
             'total' => count($this->collection)
         ];
     }

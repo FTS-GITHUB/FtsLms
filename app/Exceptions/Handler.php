@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
+use App\Traits\Jsonify;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use Jsonify;
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -43,8 +47,8 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            return self::jsonError(message: 'No record(s) found against this ID.', code: 404);
         });
     }
 }
