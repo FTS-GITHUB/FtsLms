@@ -21,9 +21,8 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::group([
     'middleware' => 'auth:sanctum',
 ], function () {
-    Route::resource('/users', UserController::class);
-    Route::resource('/roles', RoleController::class);
+    Route::apiResource('/users', UserController::class);
+    Route::apiResource('/roles', RoleController::class);
 });
 
 require __DIR__ . '/auth.php';
-// require __DIR__ . '/permissions.php';

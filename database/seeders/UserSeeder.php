@@ -7,6 +7,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+
 class UserSeeder extends Seeder
 {
     /**
@@ -18,9 +19,13 @@ class UserSeeder extends Seeder
     {
         $superAdmin = Role::firstOrCreate(['name' => RoleTypeEnum::SUPER_ADMIN]);
 
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@example.com',
         ])->assignRole($superAdmin);
+
+        $token = $user->createToken('auth')->plainTextToken;
+
+        dump("Super Admin Token : $token");
     }
 }

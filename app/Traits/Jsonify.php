@@ -6,21 +6,21 @@ use Illuminate\Http\JsonResponse;
 
 trait Jsonify
 {
-    public static function jsonSuccess($data = [] , string $message = 'Action Successful', $status = 200): JsonResponse
+    public static function jsonSuccess(string $message = 'Action Successful', $data = [],  int $code = 200): JsonResponse
     {
         return response()->json([
-            'status' => 'OK',
+            'code' => $code,
             'message' => $message,
             'data' => $data
-        ], $status);
+        ], $code);
     }
 
-    public static function jsonError($errors = [], $message = 'error', $status = 401): JsonResponse
+    public static function jsonError(string $message = 'Some Error occured', $errors = [], int $code = 401): JsonResponse
     {
         return response()->json([
-            'status' => 'error',
+            'code' => $code,
             'message' => $message,
             'errors' => $errors
-        ], $status);
+        ], $code);
     }
 }

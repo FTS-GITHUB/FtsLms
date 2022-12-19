@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
-use App\Http\Resources\UserResource;
-use App\Models\User;
-use App\Services\UserServices;
-use App\Traits\Jsonify;
 use Exception;
+use App\Models\User;
+use App\Traits\Jsonify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Contracts\Role;
+use App\Services\Permissions\UserService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\Collections\Permissions\UsersCollection;
 
 class UserController extends Controller
 {
     use Jsonify;
 
-    public function __construct(private UserServices $userService)
+    public function __construct(private UserService $userService)
     {
         parent::__permissions('users');
     }
@@ -30,12 +30,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        try {
-            $users = $this->userService->search($request->all());
-            return self::jsonSuccess(UserResource::collection($users) , message: 'User Retrived successfully.');
-        } catch (Exception $exception) {
-            return self::jsonError($exception->getMessage());
-        }
+        $data = (new UsersCollection(User::with('permissions')->get()));
+
+        return self::jsonSuccess(message: 'Roles retreived successfully.', data: $data, code: 200);
     }
 
     /**
@@ -47,7 +44,7 @@ class UserController extends Controller
     {
         try {
             $roles = $this->userService->create();
-            return self::jsonSuccess(UserResource::collection($roles) , message: 'User Retrived successfully.');
+            return self::jsonSuccess(UserResource::collection($roles), message: 'User Retrived successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -63,7 +60,7 @@ class UserController extends Controller
     {
         try {
             $users = $this->userService->add($request);
-            return self::jsonSuccess(UserResource::collection($users) , message: 'User create successfully.');
+            return self::jsonSuccess(UserResource::collection($users), message: 'User create successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -79,7 +76,7 @@ class UserController extends Controller
     {
         try {
             $user = $this->userService->show($id);
-            return self::jsonSuccess(data: $user , message: 'User retrieved successfully.');
+            return self::jsonSuccess(data: $user, message: 'User retrieved successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -96,10 +93,10 @@ class UserController extends Controller
         try {
             $id = $user->id;
             $user = User::find($id);
-            $roles = Role::pluck('name','name')->all();
-            $userRole = $user->roles->pluck('name','name')->all();
-            $data = [$user , $roles , $userRole];
-            return self::jsonSuccess(data: $data , message: 'User retrieved successfully.');
+            $roles = Role::pluck('name', 'name')->all();
+            $userRole = $user->roles->pluck('name', 'name')->all();
+            $data = [$user, $roles, $userRole];
+            return self::jsonSuccess(data: $data, message: 'User retrieved successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -117,17 +114,17 @@ class UserController extends Controller
         try {
             $id    = $user->id;
             $input = $request->all();
-        if(!empty($input['password'])){
-            $input['password'] = Hash::make($input['password']);
-        }else{
-            $input = Arr::except($input,array('password'));
-        }
+            if (!empty($input['password'])) {
+                $input['password'] = Hash::make($input['password']);
+            } else {
+                $input = Arr::except($input, array('password'));
+            }
 
-        $user = User::find($id);
-        $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
-        $user->assignRole($request->input('roles'));
-        return self::jsonSuccess(data: $user , message: 'User retrieved successfully.');
+            $user = User::find($id);
+            $user->update($input);
+            DB::table('model_has_roles')->where('model_id', $id)->delete();
+            $user->assignRole($request->input('roles'));
+            return self::jsonSuccess(data: $user, message: 'User retrieved successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

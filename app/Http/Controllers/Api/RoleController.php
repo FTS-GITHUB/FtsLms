@@ -3,132 +3,71 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleRequest;
-use App\Http\Resources\RoleResource;
-use App\Services\RoleServices;
+use App\Http\Requests\Permissions\Roles\StoreRoleRequest;
+use App\Http\Requests\Permissions\Roles\UpdateRoleRequest;
 use App\Traits\Jsonify;
-use Exception;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use App\Http\Resources\Collections\Permissions\RolesCollection;
+use App\Services\Permissions\RoleService;
+use Exception;
 
 class RoleController extends Controller
 {
     use Jsonify;
-    private $roleServices;
-    public function __construct(RoleServices $roleServices)
+
+    public function __construct()
     {
         parent::__permissions('roles');
-        $this->roleServices = $roleServices;
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+
+    public function index()
+    {
+        $data = (new RolesCollection(Role::with('permissions')->get()));
+
+        return self::jsonSuccess(message: 'Roles retreived successfully.', data: $data, code: 200);
+    }
+
+    public function store(StoreRoleRequest $request)
     {
         try {
-            $roles = $this->roleServices->search($request->all());
-            return self::jsonSuccess(RoleResource::collection($roles), message: 'Role Retrived successfully.');
+            $role = Role::create($request->safe()->only('name'));
+
+            if ($request->safe()->has('permissions')) {
+                $role->givePermissionTo($request->safe()->only('permissions'));
+            }
+
+            return self::jsonSuccess(message: 'Role saved successfully!', data: $role);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create($request)
-    {
-        try {
-            $permission = $this->roleServices->getPermission($request);
-            return self::jsonSuccess(RoleResource::collection($permission), message: 'Role Retrived successfully.');
-        } catch (Exception $exception) {
-            return self::jsonError($exception->getMessage());
-        }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(RoleRequest $request)
-    {
-        try {
-            $role = $this->roleServices->store($request);
-            return self::jsonSuccess(data: $role, message: 'Role Create successfully.');
-        } catch (Exception $exception) {
-            return self::jsonError($exception->getMessage());
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
     public function show(Role $role)
     {
-        return self::jsonSuccess(data: $role->load('permissions'), message: 'Role retrived successfully.');
+        return self::jsonSuccess(message: 'Roles retreived successfully.', data: $role->load('permissions'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Role $role)
-    {
-        try {
-            $permission = $this->roleServices->edit($role);
-            return self::jsonSuccess(data: $permission, message: 'Role retrived successfully.');
-        } catch (Exception $exception) {
-            return self::jsonError($exception->getMessage());
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function update(RoleRequest $request, Role $role)
+    public function update(UpdateRoleRequest $request, Role $role)
     {
         try {
             $role->update($request->safe()->only('name'));
 
-            $role->syncPermissions($request->safe()->only('permissions'));
-            return self::jsonSuccess(data: $role, message: 'Role updated successfully.');
+            if ($request->safe()->has('permissions')) {
+                $role->syncPermissions($request->safe()->only('permissions'));
+            }
+
+            return self::jsonSuccess(data: $role->load('permissions'), message: 'Role updated successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Role $role)
     {
+        $role->syncPermissions();
 
-        try {
-            $this->roleServices->deleteRole($role);
-            return self::jsonSuccess(data: '', message: 'Role deleted successfully.');
-        } catch (Exception $exception) {
-            return self::jsonError($exception->getMessage());
-        }
-        //
+        $role->delete();
+
+        return self::jsonSuccess(message: 'Role deleted successfully.');
     }
 }
