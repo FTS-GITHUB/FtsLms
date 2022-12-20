@@ -26,7 +26,7 @@ class NewsletterController extends Controller
     public function index()
     {
         try {
-            $newsletter = Newsletter::get();
+            $newsletter = Newsletter::where('status', 'true')->get();
 
             return self::jsonSuccess(data:$newsletter, message: 'Subscription Retrived successfully.');
         } catch (Exception $exception) {
@@ -58,14 +58,13 @@ class NewsletterController extends Controller
             ]);
             $newsletter = Newsletter::create([
                 'email' => $request->email,
-                'status' => 'true',
+                'status' => true,
             ]);
             $subscription = [
                 'email' => $newsletter->email,
-
             ];
             Mail::send('emails.subscription', $subscription, function ($message) use ($subscription) {
-                $message->from('no_reply@firm-tech.com', 'Password Request');
+                $message->from('no_reply@firm-tech.com', 'newsletters Request');
                 $message->to($subscription['email'], 'firm-tech.com');
                 $message->subject('Subscribe our news (lms system)');
             });
@@ -124,5 +123,20 @@ class NewsletterController extends Controller
     public function destroy(Newsletter $newsletter)
     {
         //
+    }
+
+    public function un_subscribe(Request $request)
+    {
+        try {
+            $subscription = Newsletter::where('email', $request->email)->first();
+            if ($subscription) {
+                $subscription->status = 'false';
+                $subscription->save();
+            }
+
+            return self::jsonSuccess(data:$subscription, message: 'Subscription Retrived successfully.');
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 }

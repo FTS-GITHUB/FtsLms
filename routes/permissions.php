@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +22,8 @@ Route::group([
 ], function () {
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/roles', RoleController::class);
+    Route::apiResource('/blogs', BlogController::class);
+    Route::apiResource('/comments', CommentController::class);
+
+    Route::post('/approved/{id}', [BlogController::class, 'approved']);
 });
