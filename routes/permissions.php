@@ -23,7 +23,9 @@ Route::group([
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/roles', RoleController::class);
     Route::apiResource('/blogs', BlogController::class);
-    Route::apiResource('/comments', CommentController::class);
-
+    Route::post('/replies', [CommentController::class, 'replies']);
+    Route::apiResource('/comments', CommentController::class)->only([
+        'index', 'store',
+    ]);
     Route::post('/approved/{id}', [BlogController::class, 'approved']);
 });

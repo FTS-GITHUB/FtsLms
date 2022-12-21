@@ -4,45 +4,50 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;
+use App\Services\CommentServices;
+use App\Traits\Jsonify;
+use Exception;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function index()
+    use Jsonify;
+
+    private $CommentServices;
+
+    public function __construct(CommentServices $CommentServices)
     {
+        parent::__permissions('comments , replies');
+        $this->CommentServices = $CommentServices;
     }
 
-    public function create()
+    public function index()
     {
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'body' => 'required',
-        ]);
+        try {
+            $comment = $this->CommentServices->create($request);
 
-        $input = $request->all();
-        $input['user_id'] = auth()->user()->id;
-
-        Comment::create($input);
-
-        return response()->json(['status' => 'success']);
-    }
-
-    public function show(Comment $comment)
-    {
-    }
-
-    public function edit(Comment $comment)
-    {
-    }
-
-    public function update(Request $request, Comment $comment)
-    {
+            return self::jsonSuccess(message: 'comment saved successfully!', data: $comment);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function destroy(Comment $comment)
     {
+    }
+
+    public function replies(Request $request)
+    {
+        try {
+            $replies = $this->CommentServices->replies($request);
+
+            return self::jsonSuccess(message: 'replies saved successfully!', data: $replies);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 }

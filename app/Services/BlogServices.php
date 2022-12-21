@@ -18,9 +18,10 @@ class BlogServices extends BaseServices
 
     public function search($params = [])
     {
-        $query = Blog::where('status', 'approved')->paginate(10);
+        $blog = Blog::with(['users', 'comments'])->where('status', 'approved')->paginate(10);
+        dd($blog);
 
-        return $query;
+        return $blog;
     }
 
     // public function create()
