@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\IslamicShortStoryRequest;
 use App\Models\Comment;
 use App\Services\CommentServices;
 use App\Traits\Jsonify;
@@ -25,7 +26,7 @@ class CommentController extends Controller
     {
     }
 
-    public function store(Request $request)
+    public function store(IslamicShortStoryRequest $request)
     {
         try {
             $comment = $this->CommentServices->create($request);

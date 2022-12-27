@@ -31,11 +31,6 @@ class CommentServices extends BaseServices
 
     public function replies($request)
     {
-        // $request->validate([
-        //     'body' => 'required',
-        //     'parent_id' => 'required',
-        // ]);
-
         $input = $request->all();
         $input['user_id'] = auth()->user()->id;
 
