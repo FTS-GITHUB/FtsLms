@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Validation\ValidationException;
+use Mail;
 
 class PasswordResetLinkController extends Controller
 {
@@ -20,20 +21,46 @@ class PasswordResetLinkController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email'],
+            'email' => 'required|email',
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
-
-        if ($status != Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
-            ]);
+        $user = User::where('email', $request->email)->first();
+        if (! $user) {
+            return response()->json([
+                'message' => 'we have sent you a varification code to your email address',
+                'status_code' => 200,
+            ], 200);
+        } else {
+            $random = rand(111111, 999999);
+            $user->varification_code = $random;
+            if ($user->save()) {
+                $userData = [
+                    'email' => $user->email,
+                    'name' => $user->name,
+                    'random' => $random,
+                ];
+                Mail::send('emails.reset_password', $userData, function ($message) use ($userData) {
+                    $message->from('no_reply@firm-tech.com', 'Password Request');
+                    $message->to($userData['email'], $userData['name']);
+                    $message->subject('Reset Password Request (lms system)');
+                });
+                if (Mail::flushMacros()) {
+                    return response()->json([
+                        'message' => 'Some error occured , Please Try again',
+                        'status_code' => 500,
+                    ], 500);
+                } else {
+                    return response()->json([
+                        'message' => 'we have sent you a varification code to your email address',
+                        'status_code' => 200,
+                    ], 200);
+                }
+            } else {
+                return response()->json([
+                    'message' => 'Some error occured , Please Try again',
+                    'status_code' => 500,
+                ], 500);
+            }
         }
 
         return response()->json(['status' => __($status)]);

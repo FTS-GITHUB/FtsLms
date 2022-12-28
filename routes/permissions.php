@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\BlogController;
+use App\Http\Controllers\Api\BookController;
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\IslamicShortStoryController;
 use App\Http\Controllers\Api\RoleController;
@@ -24,8 +26,10 @@ Route::group([
     Route::apiResource('/users', UserController::class);
     Route::apiResource('/roles', RoleController::class);
     Route::apiResource('/blogs', BlogController::class);
-    Route::apiResource('/islamic_short_stories', IslamicShortStoryController::class);
+    Route::apiResource('/books', BookController::class);
+    Route::apiResource('/categories', CategoryController::class);
 
+    Route::apiResource('/islamic_short_stories', IslamicShortStoryController::class);
     Route::post('/replies', [CommentController::class, 'replies']);
     Route::apiResource('/comments', CommentController::class)->only([
         'index', 'store',

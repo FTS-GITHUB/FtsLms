@@ -52,7 +52,6 @@ class NewsletterController extends Controller
      */
     public function store(Request $request)
     {
-        dd('hello');
         try {
             $request->validate([
                 'email' => ['required', 'string', 'email', 'max:255'],
@@ -135,7 +134,7 @@ class NewsletterController extends Controller
                 $subscription->save();
             }
 
-            return self::jsonSuccess(data:$subscription, message: 'Subscription Retrived successfully.');
+            return self::jsonSuccess(data:$subscription, message: 'Un-subscription  successfully.');
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

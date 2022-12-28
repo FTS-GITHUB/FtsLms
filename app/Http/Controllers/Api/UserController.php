@@ -2,17 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use Exception;
-use App\Models\User;
-use App\Traits\Jsonify;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Permissions\Users\StoreUserRequest;
 use App\Http\Requests\Permissions\Users\UpdateUserRequest;
 use App\Http\Resources\Collections\Permissions\UsersCollection;
 use App\Http\Resources\Permissions\UserResource;
+use App\Models\User;
+use App\Traits\Jsonify;
+use Exception;
 
 class UserController extends Controller
 {

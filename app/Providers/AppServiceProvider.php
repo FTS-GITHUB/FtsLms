@@ -25,8 +25,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-         // bypassing the roles/permissions check
-         Gate::before(function ($user, $ability) {
+        // bypassing the roles/permissions check
+        Gate::before(function ($user, $ability) {
             return $user->hasRole(RoleTypeEnum::SUPER_ADMIN) ? true : null;
         });
     }
