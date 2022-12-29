@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Book;
 use App\Traits\Jsonify;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class BookServices extends BaseServices
 {
@@ -40,7 +41,7 @@ class BookServices extends BaseServices
                 'status' => $request->status,
             ]);
 
-            return self::jsonSuccess(message: 'User saved successfully!', data: $book);
+            return self::jsonSuccess(message: 'Book saved successfully!', data: $book);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -61,20 +62,28 @@ class BookServices extends BaseServices
     {
         try {
             return $book = $book->update($request->all());
-            // $book = Book::find($request->id);
 
-            // $book->update($request->all());
-
-            return self::jsonSuccess(message: 'User updated successfully!', data: $book);
+            return self::jsonSuccess(message: 'Book updated successfully!', data: $book);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
     }
 
-    // public function delete($blog)
-    // {
-    //     return $blog->delete();
-    // }
+    public function delete($book)
+    {
+        try {
+            if ($book->delete()) {
+                Storage::delete([
+                    $book->cover_image_caption,
+                    $book->upload_book,
+                ]);
+            }
+
+            return self::jsonSuccess(message: 'Book deleted successfully!', data: $book);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
 
     // public function approved($id)
     // {

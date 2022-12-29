@@ -40,7 +40,6 @@ class BookController extends Controller
     public function store(BookRequest $request)
     {
         try {
-            // $data = $request->all();
             $book = $this->bookServices->create($request);
 
             return self::jsonSuccess('book saved successfully', data: $book);
@@ -77,5 +76,12 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        try {
+            $data = $this->bookServices->delete($book);
+
+            return self::jsonSuccess(message: 'book deleted', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 }
