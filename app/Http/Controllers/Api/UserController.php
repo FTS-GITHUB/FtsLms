@@ -10,6 +10,7 @@ use App\Http\Resources\Permissions\UserResource;
 use App\Models\User;
 use App\Traits\Jsonify;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -22,27 +23,49 @@ class UserController extends Controller
 
     public function index()
     {
-        $data = (new UsersCollection(User::with('roles.permissions')->get()));
+        DB::beginTransaction();
+        try {
+            $data = (new UsersCollection(User::with('roles.permissions')->get()));
+            DB::commit();
 
-        return self::jsonSuccess(message: 'Users retreived successfully.', data: $data, code: 200);
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function store(StoreUserRequest $request)
     {
+        DB::beginTransaction();
         try {
             $user = User::create($request->safe()->except('roles'));
 
             $user->syncRoles($request->safe()->only('roles'));
+            DB::commit();
 
             return self::jsonSuccess(message: 'User saved successfully!', data: $user);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }
 
     public function show(User $user)
     {
-        return self::jsonSuccess(message: 'Users retreived successfully.', data: new UserResource($user->load('roles.permissions')));
+        try {
+            $user = self::jsonSuccess(message: 'Users retreived successfully.', data: new UserResource($user->load('roles.permissions')));
+
+            DB::commit();
+
+            return self::jsonSuccess(message: 'User retreived successfully!', data: $user);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function update(UpdateUserRequest $request, User $user)

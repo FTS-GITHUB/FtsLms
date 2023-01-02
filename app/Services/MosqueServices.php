@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\Category;
+use App\Models\Mosque;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class CategoryServices extends BaseServices
+class MosqueServices extends BaseServices
 {
     use Jsonify;
 
-    public function __construct(Category $model)
+    public function __construct(Mosque $model)
     {
         parent::__construct($model);
     }
@@ -23,7 +23,6 @@ class CategoryServices extends BaseServices
             $model = $this->model;
 
             $model = $this->model->paginate(10);
-
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -34,16 +33,19 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function create($request)
+    public function add($request)
     {
         DB::beginTransaction();
         try {
-            $category = Category::create([
-                'name' => $request['name'],
+            $mosque = Mosque::create([
+                'masjid_name' => $request->masjid_name,
+                'address' => $request->address,
+                'imame_name' => $request->imame_name,
+                'notice_board' => $request->notice_board,
             ]);
             DB::commit();
 
-            return self::jsonSuccess(message: 'category saved successfully!', data: $category);
+            return self::jsonSuccess(message: 'Mosque saved successfully!', data:$mosque);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -51,14 +53,14 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function show($category)
+    public function show($mosque)
     {
         DB::beginTransaction();
         try {
-            $data = Category::find($category->id);
+            $data = Mosque::find($mosque);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: 'Mosque retrived successfully!', data:$data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -66,14 +68,20 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function update($category, $request)
+    public function update($mosque, $request)
     {
         DB::beginTransaction();
         try {
-            $category = $category->update($request->all());
+            $mosque = Mosque::find($mosque->id);
+            $mosque->update([
+                'masjid_name' => $request->masjid_name,
+                'address' => $request->address,
+                'imame_name' => $request->imame_name,
+                'notice_board' => $request->notice_board,
+            ]);
             DB::commit();
 
-            return self::jsonSuccess(message: 'category updated successfully!', data: $category);
+            return self::jsonSuccess(message: 'Mosque updated successfully!', data:$mosque);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -81,12 +89,14 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function destroy($category)
+    public function delete($mosque)
     {
         DB::beginTransaction();
         try {
-            $category = $category->delete();
+            $mosque = $mosque->delete();
             DB::commit();
+
+            return self::jsonSuccess(message: 'Mosque deleted successfully!', data:$mosque);
         } catch (Exception $exception) {
             DB::rollback();
 

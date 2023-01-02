@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\IslamicShortStoryController;
+use App\Http\Controllers\Api\MosqueController;
+use App\Http\Controllers\Api\PrayerController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +30,8 @@ Route::group([
     Route::apiResource('/blogs', BlogController::class);
     Route::apiResource('/books', BookController::class);
     Route::apiResource('/categories', CategoryController::class);
-
+    Route::apiResource('/mosques', MosqueController::class);
+    Route::apiResource('/prayers', PrayerController::class);
     Route::apiResource('/islamic_short_stories', IslamicShortStoryController::class);
     Route::post('/replies', [CommentController::class, 'replies']);
     Route::apiResource('/comments', CommentController::class)->only([

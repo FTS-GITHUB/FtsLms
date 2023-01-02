@@ -13,8 +13,9 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('title');
             $table->string('slug')->unique();
-            $table->text('content');
+            $table->text('content')->nullable();
             $table->text('status');
+            $table->text('file')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

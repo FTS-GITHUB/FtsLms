@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class BlogServices extends BaseServices
 {
@@ -18,13 +19,24 @@ class BlogServices extends BaseServices
 
     public function search($params = [])
     {
-        $blog = Blog::with(['user', 'comments'])->where('status', 'approved')->paginate(10);
+        DB::beginTransaction();
+        try {
+            $blog = Blog::with(['user', 'comments'])->where('status', 'approved')->paginate(10);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $blog);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
 
         return $blog;
     }
 
     public function add($request)
     {
+        DB::beginTransaction();
         try {
             $id = Auth::id();
             $blog = Blog::create([
@@ -34,32 +46,60 @@ class BlogServices extends BaseServices
                 'status' => 'pending',
                 'user_id' => $id,
             ]);
+            DB::commit();
 
-            return self::jsonSuccess(message: 'User saved successfully!', data: $blog);
+            return self::jsonSuccess(message: 'Blog saved successfully!', data: $blog);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }
 
     public function update($blog, $request)
     {
-        return $blog = $blog->update($request->all());
+        DB::beginTransaction();
+        try {
+            $blog = $blog->update($request->all());
+            DB::commit();
+
+            return self::jsonSuccess(message: 'Blog updated successfully!', data: $blog);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function delete($blog)
     {
-        return $blog->delete();
+        DB::beginTransaction();
+        try {
+            $blog = $blog->delete();
+            DB::commit();
+
+            return self::jsonSuccess(message: 'Blog deleted successfully!', data: $blog);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function approved($id)
     {
+        DB::beginTransaction();
         try {
             $approved = Blog::find($id);
             $approved->status = 'approved';
             if ($approved->save()) {
-                return self::jsonSuccess(message: 'User approved successfully!', data: $approved);
+                DB::commit();
+
+                return self::jsonSuccess(message: 'Blog approved successfully!', data: $approved);
             }
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }

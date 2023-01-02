@@ -2,16 +2,16 @@
 
 namespace App\Services;
 
-use App\Models\Category;
+use App\Models\prayer;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class CategoryServices extends BaseServices
+class prayerServices extends BaseServices
 {
     use Jsonify;
 
-    public function __construct(Category $model)
+    public function __construct(prayer $model)
     {
         parent::__construct($model);
     }
@@ -20,10 +20,7 @@ class CategoryServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $model = $this->model;
-
-            $model = $this->model->paginate(10);
-
+            $model = Prayer::with(['mosque'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -34,16 +31,15 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function create($request)
+    public function add($request)
     {
         DB::beginTransaction();
         try {
-            $category = Category::create([
-                'name' => $request['name'],
-            ]);
+            $model = $this->model;
+            $model::create($request->all());
             DB::commit();
 
-            return self::jsonSuccess(message: 'category saved successfully!', data: $category);
+            return self::jsonSuccess(message: '', data: $model);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -51,14 +47,14 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function show($category)
+    public function show($prayer)
     {
         DB::beginTransaction();
         try {
-            $data = Category::find($category->id);
+            $data = prayer::with(['mosque'])->find($prayer);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: 'prayer retrived successfully!', data:$data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -66,14 +62,16 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function update($category, $request)
+    public function update($prayer, $request)
     {
         DB::beginTransaction();
         try {
-            $category = $category->update($request->all());
+            $model = $this->model;
+            $prayer = $model::find($prayer->id);
+            $prayer->update($request->all());
             DB::commit();
 
-            return self::jsonSuccess(message: 'category updated successfully!', data: $category);
+            return self::jsonSuccess(message: 'prayer updated successfully!', data:$prayer);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -81,12 +79,14 @@ class CategoryServices extends BaseServices
         }
     }
 
-    public function destroy($category)
+    public function delete($prayer)
     {
         DB::beginTransaction();
         try {
-            $category = $category->delete();
+            $data = $prayer->delete();
             DB::commit();
+
+            return self::jsonSuccess(message: 'Record deleted successfully!', data:$data);
         } catch (Exception $exception) {
             DB::rollback();
 

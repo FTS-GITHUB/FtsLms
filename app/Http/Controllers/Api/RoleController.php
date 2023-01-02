@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Permissions\Roles\StoreRoleRequest;
 use App\Http\Requests\Permissions\Roles\UpdateRoleRequest;
-use App\Traits\Jsonify;
-use Spatie\Permission\Models\Role;
 use App\Http\Resources\Collections\Permissions\RolesCollection;
 use App\Http\Resources\Permissions\RoleResource;
-use App\Services\Permissions\RoleService;
+use App\Traits\Jsonify;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -30,15 +30,19 @@ class RoleController extends Controller
 
     public function store(StoreRoleRequest $request)
     {
+        DB::beginTransaction();
         try {
             $role = Role::create($request->safe()->only('name'));
 
             if ($request->safe()->has('permissions')) {
                 $role->givePermissionTo($request->safe()->only('permissions'));
             }
+            DB::commit();
 
             return self::jsonSuccess(message: 'Role saved successfully!', data: $role);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }

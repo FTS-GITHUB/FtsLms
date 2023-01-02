@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Book;
 use App\Traits\Jsonify;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class BookServices extends BaseServices
@@ -18,13 +19,24 @@ class BookServices extends BaseServices
 
     public function search($params = [])
     {
-        $model = $this->model;
+        DB::beginTransaction();
+        try {
+            $model = $this->model;
 
-        return $this->model->paginate(10);
+            $model = $this->model->paginate(10);
+            DB::commit();
+
+            return self::jsonSuccess(message: 'Book saved successfully!', data: $model);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function create($request)
     {
+        DB::beginTransaction();
         try {
             $cover_image = $request->file('cover_image_caption')->store('book_cover_image');
 
@@ -40,37 +52,50 @@ class BookServices extends BaseServices
                 'book_price' => $request->book_price,
                 'status' => $request->status,
             ]);
+            DB::commit();
 
             return self::jsonSuccess(message: 'Book saved successfully!', data: $book);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }
 
     public function show($book)
     {
+        DB::beginTransaction();
         try {
             $data = Book::find($book);
+            DB::commit();
 
             return self::jsonSuccess(data: $data);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }
 
     public function update($book, $request)
     {
+        DB::beginTransaction();
         try {
-            return $book = $book->update($request->all());
+            $book = $book->update($request->all());
+            dd($book);
+            DB::commit();
 
             return self::jsonSuccess(message: 'Book updated successfully!', data: $book);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }
 
     public function delete($book)
     {
+        DB::beginTransaction();
         try {
             if ($book->delete()) {
                 Storage::delete([
@@ -78,23 +103,13 @@ class BookServices extends BaseServices
                     $book->upload_book,
                 ]);
             }
+            DB::commit();
 
             return self::jsonSuccess(message: 'Book deleted successfully!', data: $book);
         } catch (Exception $exception) {
+            DB::rollback();
+
             return self::jsonError($exception->getMessage());
         }
     }
-
-    // public function approved($id)
-    // {
-    //     try {
-    //         $approved = Blog::find($id);
-    //         $approved->status = 'approved';
-    //         if ($approved->save()) {
-    //             return self::jsonSuccess(message: 'User approved successfully!', data: $approved);
-    //         }
-    //     } catch (Exception $exception) {
-    //         return self::jsonError($exception->getMessage());
-    //     }
-    // }
 }

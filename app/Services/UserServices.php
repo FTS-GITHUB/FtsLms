@@ -3,12 +3,15 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Services\BaseServices;
+use App\Traits\Jsonify;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class UserServices extends BaseServices
 {
+    use Jsonify;
 
     public function __construct(User $model)
     {
@@ -17,34 +20,66 @@ class UserServices extends BaseServices
 
     public function search($params = [])
     {
-        $model = $this->model;
-        return $this->model->paginate(10);
+        DB::beginTransaction();
+        try {
+            $model = $this->model;
+
+            $model = $this->model->paginate(10);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $model);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function create()
     {
-        $roles = Role::pluck('name','name')->all();
-        return $roles;
+        DB::beginTransaction();
+        try {
+            $roles = Role::pluck('name', 'name')->all();
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $roles);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function add($request)
     {
-        $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
-        $user = User::create($input);
-        $user->assignRole($request->input('roles'));
-        return $user;
-        // $user->notify(new UserNotification("A new user has visited on your application."));
-        // $this->smsService->send($user->phone, 'Your account created successfully');
-        return $user;
+        DB::beginTransaction();
+        try {
+            $input = $request->all();
+            $input['password'] = Hash::make($input['password']);
+            $user = User::create($input);
+            $user->assignRole($request->input('roles'));
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $user);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
+
     public function show($id)
     {
+        DB::beginTransaction();
         try {
             $user = User::find($id);
-            return $user;
-        } catch (\Throwable $th) {
-            throw $th;
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $user);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
         }
     }
 
@@ -63,12 +98,17 @@ class UserServices extends BaseServices
 
     public function delete($id)
     {
-        $user = $this->findById($id);
+        DB::beginTransaction();
+        try {
+            $user = $this->findById($id);
 
-        if($user) {
-            $user->notify(new UserNotification("your record is deleted from our site."));
-            $user->delete();
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $user);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
         }
-        return $user;
     }
 }

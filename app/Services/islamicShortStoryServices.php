@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\IslamicShortStory;
 use App\Traits\Jsonify;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class islamicShortStoryServices extends BaseServices
 {
@@ -16,29 +18,63 @@ class islamicShortStoryServices extends BaseServices
 
     public function search($params = [])
     {
-        $model = $this->model;
+        DB::beginTransaction();
+        try {
+            $model = $this->model;
 
-        return $this->model->paginate(10);
+            $model = $this->model->paginate(10);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $model);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function show($id)
     {
-        $data = IslamicShortStory::find($id);
+        DB::beginTransaction();
+        try {
+            $data = IslamicShortStory::find($id);
+            DB::commit();
 
-        return $data;
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function create($request)
     {
-        $input = $request->all();
+        try {
+            $input = $request->all();
 
-        return IslamicShortStory::create($input);
+            $input = IslamicShortStory::create($input);
+
+            return self::jsonSuccess(message: '', data: $input);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function update($request, $data)
     {
-        $input = $request->all();
+        try {
+            $input = $request->all();
 
-        return IslamicShortStory::where('id', $data['id'])->update($input);
+            $input = IslamicShortStory::where('id', $data['id'])->update($input);
+
+            return self::jsonSuccess(message: '', data: $input);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 }

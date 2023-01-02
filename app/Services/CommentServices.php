@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Comment;
 use App\Traits\Jsonify;
+use Exception;
+use Illuminate\Support\Facades\DB;
 
 class CommentServices extends BaseServices
 {
@@ -16,24 +18,55 @@ class CommentServices extends BaseServices
 
     public function search($params = [])
     {
-        $model = $this->model;
+        DB::beginTransaction();
+        try {
+            $model = $this->model;
 
-        return $this->model->paginate(10);
+            $model = $this->model->paginate(10);
+
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $model);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function create($request)
     {
-        $input = $request->all();
-        $input['user_id'] = auth()->user()->id;
+        DB::beginTransaction();
+        try {
+            $input = $request->all();
+            $input['user_id'] = auth()->user()->id;
 
-        Comment::create($input);
+            $comment = Comment::create($input);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $comment);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function replies($request)
     {
-        $input = $request->all();
-        $input['user_id'] = auth()->user()->id;
+        DB::beginTransaction();
+        try {
+            $input = $request->all();
+            $input['user_id'] = auth()->user()->id;
 
-        Comment::create($input);
+            $comment = Comment::create($input);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $comment);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
     }
 }
