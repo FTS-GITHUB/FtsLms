@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\DepartmentController;
-use App\Http\Controllers\Api\CourseAssignToTeacherController as CourseController
+use App\Http\Controllers\Api\CourseAssignToTeacherController as CourseController;
 use Illuminate\Support\Facades\Route;
 
 /*
