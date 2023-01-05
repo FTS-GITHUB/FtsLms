@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Blog;
+use App\Models\Image;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class BlogServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $blog = Blog::with(['user', 'comments'])->where('status', 'approved')->paginate(10);
+            $blog = Blog::with(['user', 'comments', 'image'])->where('status', 'approved')->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $blog);
@@ -45,6 +46,11 @@ class BlogServices extends BaseServices
                 'content' => $request->content,
                 'status' => 'pending',
                 'user_id' => $id,
+            ]);
+            $blog = Image::create([
+                'url' => cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath(),
+                'imageable_id' => $blog->id,
+                'imageable_type' => \App\Models\Blog::class,
             ]);
             DB::commit();
 

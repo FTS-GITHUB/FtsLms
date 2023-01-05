@@ -13,7 +13,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('author');
             $table->string('publisher');
-            $table->string('cover_image_caption');
             $table->text('upload_book');
             $table->string('category');
             $table->text('description')->nullable();

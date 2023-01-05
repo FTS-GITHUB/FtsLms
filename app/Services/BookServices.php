@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Book;
+use App\Models\Image;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -22,8 +23,7 @@ class BookServices extends BaseServices
         DB::beginTransaction();
         try {
             $model = $this->model;
-
-            $model = $this->model->paginate(10);
+            $model = $this->model->with('image')->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: 'Book saved successfully!', data: $model);
@@ -38,19 +38,21 @@ class BookServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $cover_image = $request->file('cover_image_caption')->store('book_cover_image');
-
             $book = Book::create([
                 'title' => $request->title,
                 'author' => $request->author,
                 'publisher' => $request->publisher,
-                'cover_image_caption' => $cover_image,
                 'upload_book' => $request->file('upload_book')->store('books'),
                 'category' => $request->category,
                 'description' => $request->description,
                 'remar' => $request->remarks,
                 'book_price' => $request->book_price,
                 'status' => $request->status,
+            ]);
+            $book = Image::create([
+                'url' => cloudinary()->upload($request->file('cover_image_caption')->getRealPath())->getSecurePath(),
+                'imageable_id' => $book->id,
+                'imageable_type' => \App\Models\Book::class,
             ]);
             DB::commit();
 
@@ -66,7 +68,7 @@ class BookServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $data = Book::find($book);
+            $data = Book::with('category')->find($book);
             DB::commit();
 
             return self::jsonSuccess(data: $data);
@@ -81,8 +83,19 @@ class BookServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $book = $book->update($request->all());
-            dd($book);
+            $book = $book->update([
+                'title' => $request->title,
+                'author' => $request->author,
+                'publisher' => $request->publisher,
+                'cover_image_caption' => $request->cover_image_caption,
+                'upload_book' => $request->upload_book,
+                'category' => $request->category,
+                'description' => $request->description,
+                'book_price' => $request->book_price,
+                'remarks' => $request->remarks,
+                'status' => $request->status,
+            ]);
+
             DB::commit();
 
             return self::jsonSuccess(message: 'Book updated successfully!', data: $book);

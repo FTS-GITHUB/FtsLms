@@ -19,12 +19,11 @@ class UpdateUserRequest extends FormRequest
     {
         $id = $this->route('user')->id;
 
-        dd($id);
         return [
             'name' => ['string', 'max:255'],
             'email' => ['string', 'email', 'max:255', "unique:users,email,{$id},id,deleted_at,NULL"],
             'password' => [Password::defaults()],
-            'roles' => ['array']
+            'roles' => ['array'],
         ];
     }
 

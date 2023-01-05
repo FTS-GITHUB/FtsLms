@@ -7,6 +7,7 @@ use App\Http\Requests\Permissions\Users\StoreUserRequest;
 use App\Http\Requests\Permissions\Users\UpdateUserRequest;
 use App\Http\Resources\Collections\Permissions\UsersCollection;
 use App\Http\Resources\Permissions\UserResource;
+use App\Models\Image;
 use App\Models\User;
 use App\Traits\Jsonify;
 use Exception;
@@ -25,7 +26,7 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-            $data = (new UsersCollection(User::with('roles.permissions')->get()));
+            $data = (new UsersCollection(User::with(['roles.permissions'])->get()));
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $data);
@@ -43,6 +44,13 @@ class UserController extends Controller
             $user = User::create($request->safe()->except('roles'));
 
             $user->syncRoles($request->safe()->only('roles'));
+
+            $user = Image::create([
+                'url' => cloudinary()->upload($request->file('avatar')->getRealPath())->getSecurePath(),
+                'imageable_id' => $user->id,
+                'imageable_type' => \App\Models\User::class,
+
+            ]);
             DB::commit();
 
             return self::jsonSuccess(message: 'User saved successfully!', data: $user);

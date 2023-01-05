@@ -14,4 +14,14 @@ class Book extends Model
     protected $fillable = [
         'title', 'author', 'publisher', 'category', 'upload_book', 'description', 'book_price', 'cover_image_caption', 'remarks', 'status',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }
