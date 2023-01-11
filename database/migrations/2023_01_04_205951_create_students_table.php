@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email');
             $table->string('contact_no');
-            $table->string('date');
+            $table->date('enrollment_date');
             $table->string('address');
             $table->timestamps();
         });

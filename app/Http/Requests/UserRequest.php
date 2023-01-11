@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\User;
+use Illuminate\Foundation\Http\FormRequest;
+
 class UserRequest extends FormRequest
 {
     /**
@@ -21,14 +22,15 @@ class UserRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules(User  $user)
+    public function rules(User $user)
     {
         $id = $user->id;
+
         return [
             'name' => 'required',
             'email' => 'required|email|unique:users,email,'.$id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
         ];
     }
 }

@@ -64,6 +64,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         try {
+            dd($user);
             $user = self::jsonSuccess(message: 'Users retreived successfully.', data: new UserResource($user->load('roles.permissions')));
 
             DB::commit();

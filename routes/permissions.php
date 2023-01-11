@@ -3,16 +3,16 @@
 use App\Http\Controllers\Api\BlogController;
 use App\Http\Controllers\Api\BookController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ClassAllocateController;
 use App\Http\Controllers\Api\CommentController;
+use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\IslamicShortStoryController;
 use App\Http\Controllers\Api\MosqueController;
 use App\Http\Controllers\Api\PrayerController;
 use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\StudentController;
-use App\Http\Controllers\Api\DepartmentController;
-use App\Http\Controllers\Api\CourseAssignToTeacherController as CourseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +37,8 @@ Route::group([
     Route::apiResource('/mosques', MosqueController::class);
     Route::apiResource('/prayers', PrayerController::class);
     Route::apiResource('/teachers', TeacherController::class);
+    Route::apiResource('/departments', DepartmentController::class);
+    Route::apiResource('/class_allocates', ClassAllocateController::class);
     Route::apiResource('/students', StudentController::class);
     Route::apiResource('/islamic_short_stories', IslamicShortStoryController::class);
     Route::post('/replies', [CommentController::class, 'replies']);
