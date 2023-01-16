@@ -2,18 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Course;
+use App\Models\CourseAssignToTeacher;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class CourseServices extends BaseServices
+class CourseAssignToTeacherServices extends BaseServices
 {
     use Jsonify;
 
     protected $model;
 
-    public function __construct(Course $model)
+    public function __construct(CourseAssignToTeacher $model)
     {
         parent::__construct($model);
     }
@@ -23,7 +23,7 @@ class CourseServices extends BaseServices
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model = $this->model->with('department')->paginate(10);
+            $model = $this->model->with(['department', 'teacher', 'courses'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -34,11 +34,11 @@ class CourseServices extends BaseServices
         }
     }
 
-    public function show($course)
+    public function show($courseAssignToTeacher)
     {
         DB::beginTransaction();
         try {
-            $data = Course::with('department')->find($course);
+            $data = CourseAssignToTeacher::with(['department', 'teacher', 'courses'])->find($courseAssignToTeacher);
             DB::commit();
 
             return self::jsonSuccess(data: $data);
@@ -53,13 +53,11 @@ class CourseServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $data = Course::create([
+            $data = CourseAssignToTeacher::create([
                 'department_id' => $request['department_id'],
-                'course_code' => $request['course_code'],
-                'course_name' => $request['course_name'],
-                'course_credits' => $request['course_credits'],
-                'status' => $request['status'],
-                'course_description' => $request['course_description'],
+                'teacher_id' => $request['teacher_id'],
+                'course_id' => $request['course_id'],
+                'creadit' => $request['creadit'],
             ]);
 
             DB::commit();
@@ -87,44 +85,14 @@ class CourseServices extends BaseServices
         }
     }
 
-   public function delete($course)
+   public function delete($courseAssignToTeacher)
    {
        DB::beginTransaction();
        try {
-           $data = $course->delete();
+           $data = $courseAssignToTeacher->delete();
            DB::commit();
 
            return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
-       } catch (Exception $exception) {
-           DB::rollback();
-
-           return self::jsonError($exception->getMessage());
-       }
-   }
-
-   public function pro()
-   {
-       DB::beginTransaction();
-       try {
-           $model = $this->model->where('status', 'pro')->paginate('10');
-           DB::commit();
-
-           return self::jsonSuccess(message: '', data: $model);
-       } catch (Exception $exception) {
-           DB::rollback();
-
-           return self::jsonError($exception->getMessage());
-       }
-   }
-
-   public function free()
-   {
-       DB::beginTransaction();
-       try {
-           $model = $this->model->where('status', 'free')->paginate('10');
-           DB::commit();
-
-           return self::jsonSuccess(message: '', data: $model);
        } catch (Exception $exception) {
            DB::rollback();
 

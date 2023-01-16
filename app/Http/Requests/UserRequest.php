@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Password;
 
 class UserRequest extends FormRequest
 {
@@ -27,10 +28,10 @@ class UserRequest extends FormRequest
         $id = $user->id;
 
         return [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'password' => 'same:confirm-password',
-            'roles' => 'required',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,NULL,id,deleted_at,NULL'],
+            'password' => ['required', Password::defaults()],
+            'roles' => ['required'],
         ];
     }
 }

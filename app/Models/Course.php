@@ -11,13 +11,18 @@ class Course extends Model
 
     public $guarded = [];
 
-    public function departments()
+    public function department()
     {
-        return $this->hasMany(Department::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function classes()
     {
         return $this->hasMany(ClassAllocate::class);
+    }
+
+    public function courseAssignToTeacher()
+    {
+        return $this->hasMany(CourseAssignToTeacher::class);
     }
 }
