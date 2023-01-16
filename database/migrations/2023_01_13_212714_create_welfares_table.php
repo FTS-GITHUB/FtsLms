@@ -8,13 +8,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('welfares', function (Blueprint $table) {
             $table->id();
+            $table->string('category');
+            $table->string('amount');
             $table->string('name');
-            $table->string('email');
-            $table->string('contact_no');
-            $table->date('enrollment_date');
-            $table->string('address');
             $table->timestamps();
         });
     }

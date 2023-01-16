@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -41,7 +42,11 @@ class UserController extends Controller
     {
         DB::beginTransaction();
         try {
-            $user = User::create($request->safe()->except('roles'));
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+            ]);
 
             $user->syncRoles($request->safe()->only('roles'));
 

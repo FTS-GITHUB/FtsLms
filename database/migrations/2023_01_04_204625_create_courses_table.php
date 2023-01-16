@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('course_code');
             $table->string('course_name');
             $table->string('course_credits');
+            $table->string('status');
             $table->string('course_description');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->timestamps();

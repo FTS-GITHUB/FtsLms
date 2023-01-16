@@ -8,13 +8,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('contact_no');
-            $table->date('enrollment_date');
-            $table->string('address');
+            $table->string('url');
+            $table->string('tag_name');
+            $table->morphs('tagable');
             $table->timestamps();
         });
     }

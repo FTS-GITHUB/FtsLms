@@ -24,6 +24,7 @@ class CommentController extends Controller
 
     public function index()
     {
+        dd('hello');
     }
 
     public function store(IslamicShortStoryRequest $request)

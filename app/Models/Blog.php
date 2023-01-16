@@ -33,4 +33,9 @@ class Blog extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
+
+    public function tags()
+    {
+        return $this->morphOne(Tag::class, 'taggable');
+    }
 }

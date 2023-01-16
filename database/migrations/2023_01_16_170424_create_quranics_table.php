@@ -8,13 +8,11 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('quranics', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('contact_no');
-            $table->date('enrollment_date');
-            $table->string('address');
+            $table->string('qari_name');
+            $table->string('surah_name');
+            $table->string('para_number');
             $table->timestamps();
         });
     }

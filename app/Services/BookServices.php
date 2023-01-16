@@ -43,6 +43,7 @@ class BookServices extends BaseServices
                 'author' => $request->author,
                 'publisher' => $request->publisher,
                 'upload_book' => $request->file('upload_book')->store('books'),
+                'cover_image_caption' => $request->file('cover_image_caption')->store('cover_image_caption'),
                 'category' => $request->category,
                 'description' => $request->description,
                 'remar' => $request->remarks,

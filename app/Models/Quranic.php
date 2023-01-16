@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Student extends Model
+class Quranic extends Model
 {
     use HasFactory;
 
     public $guarded = [];
 
-    public function teacher()
+    public function tags()
     {
-        return $this->belongsTo(Teacher::class);
+        return $this->morphOne(Tag::class, 'taggable');
     }
 }

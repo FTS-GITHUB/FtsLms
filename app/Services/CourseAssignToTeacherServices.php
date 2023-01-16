@@ -2,16 +2,18 @@
 
 namespace App\Services;
 
-use App\Models\Teacher;
+use App\Models\CourseAssignToTeacher;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
-class TeacherServices extends BaseServices
+class CourseAssignToTeacherServices extends BaseServices
 {
     use Jsonify;
 
-    public function __construct(Teacher $model)
+    protected $model;
+
+    public function __construct(CourseAssignToTeacher $model)
     {
         parent::__construct($model);
     }
@@ -21,7 +23,7 @@ class TeacherServices extends BaseServices
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model = $this->model->paginate(10);
+            $model = $this->model->with(['department', 'teacher', 'courses'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -32,14 +34,14 @@ class TeacherServices extends BaseServices
         }
     }
 
-    public function show($id)
+    public function show($courseAssignToTeacher)
     {
         DB::beginTransaction();
         try {
-            $data = Teacher::find($id);
+            $data = CourseAssignToTeacher::with(['department', 'teacher', 'courses'])->find($courseAssignToTeacher);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -47,20 +49,20 @@ class TeacherServices extends BaseServices
         }
     }
 
-    public function add($request)
+    public function create($request)
     {
         DB::beginTransaction();
         try {
-            $data = Teacher::create([
-                'name' => $request['name'],
-                'address' => $request['address'],
-                'email' => $request['email'],
-                'contact_no' => $request['contact_no'],
-                'designation' => $request['designation'],
+            $data = CourseAssignToTeacher::create([
+                'department_id' => $request['department_id'],
+                'teacher_id' => $request['teacher_id'],
+                'course_id' => $request['course_id'],
+                'creadit' => $request['creadit'],
             ]);
+
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: 'Course saved successfully!', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -68,14 +70,14 @@ class TeacherServices extends BaseServices
         }
     }
 
-    public function update($teacher, $request)
+    public function update($model, $request)
     {
         DB::beginTransaction();
         try {
-            $data = $teacher->update($request->all());
+            $data = $model->update($request->all());
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: 'Course updated successfully!', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -83,15 +85,14 @@ class TeacherServices extends BaseServices
         }
     }
 
-   public function destroy($teacher)
+   public function delete($courseAssignToTeacher)
    {
        DB::beginTransaction();
        try {
-           dd($teacher);
-           $data = $teacher->delete();
+           $data = $courseAssignToTeacher->delete();
            DB::commit();
 
-           return self::jsonSuccess(message: 'Record deleted', data: $data);
+           return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
        } catch (Exception $exception) {
            DB::rollback();
 

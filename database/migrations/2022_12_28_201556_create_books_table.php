@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('author');
             $table->string('publisher');
             $table->text('upload_book');
+            $table->text('cover_image_caption');
             $table->string('category');
             $table->text('description')->nullable();
             $table->text('book_price');

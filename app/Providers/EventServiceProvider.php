@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Book;
+use App\Models\Quranic;
 use App\Models\User;
 use App\Observers\Permissions\BookObserver;
 use App\Observers\Permissions\UserObserver;
+use App\Observers\QuranicObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -32,6 +34,7 @@ class EventServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Book::observe(BookObserver::class);
+        Quranic::observe(QuranicObserver::class);
     }
 
     /**
