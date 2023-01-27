@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Traits\Jsonify;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
 class BookRequest extends FormRequest
 {
@@ -17,7 +16,18 @@ class BookRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'title' => ['required', 'string', 'max:255'],
+            'author' => ['required', 'string', 'max:255'],
+            'publisher' => ['required', 'string', 'max:255'],
+            'upload_book' => 'required',
+            'cover_image_caption' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'category' => ['required', 'string'],
+            'description' => ['required', 'string', 'max:255'],
+            'remarks' => ['required', 'string'],
+            'book_price' => ['required', 'string', 'max:255'],
+            'status' => ['required', 'string', 'max:255'],
+        ];
     }
 
     protected function failedValidation(Validator $validator)

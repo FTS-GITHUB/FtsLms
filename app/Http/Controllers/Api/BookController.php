@@ -63,12 +63,13 @@ class BookController extends Controller
     {
     }
 
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book)
     {
+
         try {
             $data = $this->bookServices->update($book, $request);
 
-            return self::jsonSuccess(message: 'book updated', data: $data);
+            return self::jsonSuccess(message: 'Book update successfully!', data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

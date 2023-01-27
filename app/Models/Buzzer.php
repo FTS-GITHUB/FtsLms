@@ -5,19 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Book extends Model
+class Buzzer extends Model
 {
     use HasFactory;
 
     public $guarded = [];
 
-    public function category()
+    public function team()
     {
-        return $this->belongsTo(Category::class);
+        return $this->hasOne(Team::class);
     }
 
-    public function image()
+    public function buzzerResult()
     {
-        return $this->morphOne(Image::class, 'imageable');
+        return $this->hasOne(BuzzerResult::class);
     }
 }

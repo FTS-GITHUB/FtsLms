@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Book;
 use App\Models\Image;
 use App\Traits\Jsonify;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -46,7 +47,7 @@ class BookServices extends BaseServices
                 'cover_image_caption' => $request->file('cover_image_caption')->store('cover_image_caption'),
                 'category' => $request->category,
                 'description' => $request->description,
-                'remar' => $request->remarks,
+                'remarks' => $request->remarks,
                 'book_price' => $request->book_price,
                 'status' => $request->status,
             ]);
@@ -84,23 +85,34 @@ class BookServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $book = $book->update([
+            $data = $book->update([
                 'title' => $request->title,
                 'author' => $request->author,
                 'publisher' => $request->publisher,
-                'cover_image_caption' => $request->cover_image_caption,
-                'upload_book' => $request->upload_book,
+                'upload_book' => $request->file('upload_book')->store('books'),
                 'category' => $request->category,
                 'description' => $request->description,
-                'book_price' => $request->book_price,
                 'remarks' => $request->remarks,
+                'book_price' => $request->book_price,
                 'status' => $request->status,
             ]);
+            if ($book) {
+                $data = Image::where('imageable_id', $book->id)->first();
+                dd(Cloudinary::destroy($data->id));
+                if (Cloudinary::destroy($data->id)) {
+                    $book = Image::create([
+                        'url' => cloudinary()->upload($request->file('cover_image_caption')->getRealPath())->getSecurePath(),
+                        'imageable_id' => $book->id,
+                        'imageable_type' => \App\Models\Book::class,
+                    ]);
+                }
+            }
 
             DB::commit();
 
-            return self::jsonSuccess(message: 'Book updated successfully!', data: $book);
+            return self::jsonSuccess(message: 'Book updated successfully!', data: $data);
         } catch (Exception $exception) {
+            dd($exception);
             DB::rollback();
 
             return self::jsonError($exception->getMessage());
