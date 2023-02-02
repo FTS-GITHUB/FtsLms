@@ -11,16 +11,35 @@ use Exception;
 
 class TeamController extends Controller
 {
+    /**
+     * Helper method for response
+     */
     use Jsonify;
 
+    /**
+     * global variable which is used to entire class function
+     *
+     * @var [type]
+     */
     private $teamServices;
 
+    /**
+     * contructor method for loading permissions and services
+     *
+     * @param  TeamServices  $teamServices
+     */
     public function __construct(TeamServices $teamServices)
     {
         parent::__permissions('teams');
         $this->teamServices = $teamServices;
     }
 
+    /**
+     * getting all teams data from database
+     *
+     * @param  TeamRequest  $request
+     * @return void
+     */
     public function index(TeamRequest $request)
     {
         try {
@@ -36,6 +55,12 @@ class TeamController extends Controller
     {
     }
 
+    /**
+     * create a new team
+     *
+     * @param  TeamRequest  $request
+     * @return void
+     */
     public function store(TeamRequest $request)
     {
         try {
@@ -47,6 +72,12 @@ class TeamController extends Controller
         }
     }
 
+    /**
+     * single record display
+     *
+     * @param  Team  $team
+     * @return void
+     */
     public function show(Team $team)
     {
         try {
@@ -62,6 +93,13 @@ class TeamController extends Controller
     {
     }
 
+    /**
+     * update team record
+     *
+     * @param  TeamRequest  $request
+     * @param  Team  $team
+     * @return void
+     */
     public function update(TeamRequest $request, Team $team)
     {
         try {
@@ -73,6 +111,12 @@ class TeamController extends Controller
         }
     }
 
+    /**
+     * delete data from database
+     *
+     * @param  Team  $team
+     * @return void
+     */
     public function destroy(Team $team)
     {
         try {

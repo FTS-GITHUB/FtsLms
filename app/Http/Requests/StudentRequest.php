@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Traits\Jsonify;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
 class StudentRequest extends FormRequest
 {
@@ -17,7 +16,13 @@ class StudentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255'],
+            'enrollment_date' => ['required', 'string', 'max:255'],
+            'contact_no' => ['required', 'string'],
+        ];
     }
 
     protected function failedValidation(Validator $validator)

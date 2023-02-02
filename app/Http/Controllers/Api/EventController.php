@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EventRequest;
 use App\Models\Event;
 use App\Services\EventServices;
 use App\Traits\Jsonify;
 use Exception;
-use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
@@ -15,14 +15,24 @@ class EventController extends Controller
 
     private $eventService;
 
+    /**
+     * load permissions and eventServices
+     *
+     * @param  EventServices  $eventService
+     */
     public function __construct(EventServices $eventService)
     {
         parent::__permissions('events');
         $this->eventService = $eventService;
     }
 
-    // show event by date
-    public function index(Request $request)
+    /**
+     * getting the event service
+     *
+     * @param  EventRequest  $request
+     * @return void
+     */
+    public function index(EventRequest $request)
     {
         $data = Event::whereDate('start', '>=', $request->start)
                         ->whereDate('end', '<=', $request->end)
@@ -35,9 +45,13 @@ class EventController extends Controller
     {
     }
 
-    // add event
-
-    public function store(Request $request)
+    /**
+     * add a new event
+     *
+     * @param  EventRequest  $request
+     * @return void
+     */
+    public function store(EventRequest $request)
     {
         try {
             $data = $this->eventService->create($request);
@@ -56,7 +70,14 @@ class EventController extends Controller
     {
     }
 
-    public function update(Request $request, Event $event)
+    /**
+     * update event
+     *
+     * @param  EventRequest  $request
+     * @param  Event  $event
+     * @return void
+     */
+    public function update(EventRequest $request, Event $event)
     {
         try {
             $data = $this->eventService->update($event, $request);
@@ -67,6 +88,12 @@ class EventController extends Controller
         }
     }
 
+    /**
+     * delete event
+     *
+     * @param  Event  $event
+     * @return void
+     */
     public function destroy(Event $event)
     {
         $event = $event->delete();

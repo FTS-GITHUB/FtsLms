@@ -12,16 +12,35 @@ use Illuminate\Http\Request;
 
 class QuestionController extends Controller
 {
+    /**
+     * Helper method to create return response
+     */
     use Jsonify;
 
+    /**
+     * global variables for request
+     *
+     * @var [type]
+     */
     private $questionServices;
 
+    /**
+     * load services when constructor called
+     *
+     * @param  QuestionServices  $questionServices
+     */
     public function __construct(QuestionServices $questionServices)
     {
         parent::__permissions('questions');
         $this->questionServices = $questionServices;
     }
 
+    /**
+     * getting all questions from database
+     *
+     * @param  QuestionRequest  $request
+     * @return void
+     */
     public function index(QuestionRequest $request)
     {
         try {
@@ -29,7 +48,7 @@ class QuestionController extends Controller
 
             return self::jsonSuccess(message: '', data: $data);
         } catch (Exception $exception) {
-            return self::jsonError(Message: 'some error occurred', data: $data);
+            return self::jsonError(message: 'some error occurred', data: $data);
         }
     }
 
@@ -37,6 +56,12 @@ class QuestionController extends Controller
     {
     }
 
+    /**
+     * store all question in database
+     *
+     * @param  QuestionRequest  $request
+     * @return void
+     */
     public function store(QuestionRequest $request)
     {
         try {
@@ -48,6 +73,12 @@ class QuestionController extends Controller
         }
     }
 
+    /**
+     * show single question from database
+     *
+     * @param  Question  $question
+     * @return void
+     */
     public function show(Question $question)
     {
         try {
@@ -63,6 +94,13 @@ class QuestionController extends Controller
     {
     }
 
+    /**
+     * update question
+     *
+     * @param  Request  $request
+     * @param  Question  $question
+     * @return void
+     */
     public function update(Request $request, Question $question)
     {
         try {
@@ -74,6 +112,12 @@ class QuestionController extends Controller
         }
     }
 
+    /**
+     * delete questions function
+     *
+     * @param  Question  $question
+     * @return void
+     */
     public function destroy(Question $question)
     {
         try {
@@ -85,6 +129,12 @@ class QuestionController extends Controller
         }
     }
 
+    /**
+     * ask question and replay with opetion
+     *
+     * @param  Request  $request
+     * @return void
+     */
     public function games(Request $request)
     {
         try {
@@ -96,6 +146,12 @@ class QuestionController extends Controller
         }
     }
 
+    /**
+     * show results from database
+     *
+     * @param  Request  $request
+     * @return void
+     */
     public function result(Request $request)
     {
         try {

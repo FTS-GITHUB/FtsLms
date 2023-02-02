@@ -11,16 +11,33 @@ use Illuminate\Http\Request;
 
 class BuzzerController extends Controller
 {
+    /**
+     * Helper method to create response
+     */
     use Jsonify;
 
+    /**
+     * global variables for services
+     */
     private $BuzzerServices;
 
+    /**
+     * load services when constructor is called
+     *
+     * @param  BuzzerServices  $BuzzerServices
+     */
     public function __construct(BuzzerServices $BuzzerServices)
     {
         parent::__permissions('buzzers');
         $this->BuzzerServices = $BuzzerServices;
     }
 
+    /**
+     * getting all questions
+     *
+     * @param  Request  $request
+     * @return void
+     */
     public function index(Request $request)
     {
         try {
@@ -36,6 +53,12 @@ class BuzzerController extends Controller
     {
     }
 
+    /**
+     * create question in database
+     *
+     * @param  Request  $request
+     * @return void
+     */
     public function store(Request $request)
     {
         try {
@@ -63,6 +86,12 @@ class BuzzerController extends Controller
     {
     }
 
+    /**
+     * buzzer results are return
+     *
+     * @param  Request  $request
+     * @return void
+     */
     public function buzzers_results(Request $request)
     {
         try {

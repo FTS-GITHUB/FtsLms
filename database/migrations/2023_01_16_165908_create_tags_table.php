@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('url');
             $table->string('tag_name');
-            $table->morphs('tagable');
+            $table->morphs('taggable');
             $table->timestamps();
         });
     }

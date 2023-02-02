@@ -77,7 +77,8 @@ class MarkController extends Controller
     {
         try {
             $data = $this->markServices->delete($mark);
-            return self::jsonSuccess(message:'data deleted successfully' , data: $data);
+
+            return self::jsonSuccess(message:'data deleted successfully', data: $data);
         } catch (Exception $exception) {
             //
         }

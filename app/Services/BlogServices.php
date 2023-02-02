@@ -18,11 +18,17 @@ class BlogServices extends BaseServices
         parent::__construct($model);
     }
 
+    /**
+     * get all blog posts from database
+     *
+     * @param  array  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
         try {
-            $blog = Blog::with(['user', 'comments', 'image'])->where('status', 'approved')->paginate(10);
+            $blog = Blog::with(['user:id,name', 'comments', 'image'])->where('status', 'approved')->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $blog);
@@ -31,10 +37,14 @@ class BlogServices extends BaseServices
 
             return self::jsonError($exception->getMessage());
         }
-
-        return $blog;
     }
 
+    /**
+     * add a blog entry to the database
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function add($request)
     {
         DB::beginTransaction();
@@ -62,6 +72,13 @@ class BlogServices extends BaseServices
         }
     }
 
+    /**
+     * update blog post data to current database
+     *
+     * @param [update] $blog
+     * @param [put] $request
+     * @return void
+     */
     public function update($blog, $request)
     {
         DB::beginTransaction();
@@ -77,6 +94,12 @@ class BlogServices extends BaseServices
         }
     }
 
+    /**
+     * delete blog from the database and return the blog data object
+     *
+     * @param [delete] $blog
+     * @return void
+     */
     public function delete($blog)
     {
         DB::beginTransaction();
@@ -84,7 +107,7 @@ class BlogServices extends BaseServices
             $blog = $blog->delete();
             DB::commit();
 
-            return self::jsonSuccess(message: 'Blog deleted successfully!', data: $blog);
+            return self::jsonSuccess(message: 'Blog deleted successfully!');
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -92,11 +115,17 @@ class BlogServices extends BaseServices
         }
     }
 
+    /**
+     * approved blog post
+     *
+     * @param [approved] $id
+     * @return void
+     */
     public function approved($id)
     {
         DB::beginTransaction();
         try {
-            $approved = Blog::find($id);
+            $approved = Blog::with('user:id,name')->find($id);
             $approved->status = 'approved';
             if ($approved->save()) {
                 DB::commit();

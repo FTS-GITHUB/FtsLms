@@ -70,7 +70,9 @@ class CategoryServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $category = $category->update($request->all());
+            $category = $category->update([
+                'name' => $request['name'],
+            ]);
             DB::commit();
 
             return self::jsonSuccess(message: 'category updated successfully!', data: $category);

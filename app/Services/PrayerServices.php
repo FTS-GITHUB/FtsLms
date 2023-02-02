@@ -16,11 +16,16 @@ class prayerServices extends BaseServices
         parent::__construct($model);
     }
 
+    /**
+     * get all prayer data from database
+     *
+     * @param  prayer  $model
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
         try {
-            $model = Prayer::with(['mosque'])->paginate(10);
+            $model = Prayer::with(['mosque:id,masjid_name,address,notice_board'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -31,15 +36,21 @@ class prayerServices extends BaseServices
         }
     }
 
+    /**
+     * create a new prayer
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function add($request)
     {
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model::create($request->all());
+            $data = $model::create($request->all());
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $model);
+            return self::jsonSuccess(message: '', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -47,11 +58,17 @@ class prayerServices extends BaseServices
         }
     }
 
+    /**
+     * show all records in the table
+     *
+     * @param [get] $prayer
+     * @return void
+     */
     public function show($prayer)
     {
         DB::beginTransaction();
         try {
-            $data = prayer::with(['mosque'])->find($prayer);
+            $data = prayer::with(['mosque:id,masjid_name,address,notice_board'])->find($prayer);
             DB::commit();
 
             return self::jsonSuccess(message: 'prayer retrived successfully!', data:$data);
@@ -62,6 +79,13 @@ class prayerServices extends BaseServices
         }
     }
 
+    /**
+     * update a prayer data from database
+     *
+     * @param [update] $prayer
+     * @param [PUT] $request
+     * @return void
+     */
     public function update($prayer, $request)
     {
         DB::beginTransaction();
@@ -79,6 +103,12 @@ class prayerServices extends BaseServices
         }
     }
 
+    /**
+     * delete a prayer data from database
+     *
+     * @param [delete] $prayer
+     * @return void
+     */
     public function delete($prayer)
     {
         DB::beginTransaction();

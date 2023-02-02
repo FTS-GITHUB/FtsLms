@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\WebrtcStreamingController;
 use App\Http\Controllers\Api\WelfareController;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +74,7 @@ Route::group([
 
     Route::apiResource('/course_assign_to_teachers', CourseAssignToTeacherController::class);
     Route::get('/free_courses', [CourseController::class, 'freeCourse']);
+    Route::get('/free_courses', [WebrtcStreamingController::class, 'index']);
 
     Route::get('/pro_courses', [CourseController::class, 'proCourse']);
     Route::apiResource('/islamic_short_stories', IslamicShortStoryController::class);

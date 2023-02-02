@@ -13,6 +13,8 @@ return new class extends Migration
             $table->string('category');
             $table->string('amount');
             $table->string('name');
+            $table->string('email');
+            $table->string('phone');
             $table->timestamps();
         });
     }

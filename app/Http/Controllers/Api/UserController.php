@@ -10,6 +10,7 @@ use App\Http\Resources\Permissions\UserResource;
 use App\Models\Image;
 use App\Models\User;
 use App\Traits\Jsonify;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -98,9 +99,12 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        $data = Image::where('imageable_id', $user->id)->first();
+        Cloudinary::destroy($data->imageable_id);
         $user->syncRoles();
 
         $user->delete();
+        $data->delete();
 
         return self::jsonSuccess(message: 'User deleted successfully.');
     }

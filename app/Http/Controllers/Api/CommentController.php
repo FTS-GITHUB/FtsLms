@@ -22,9 +22,15 @@ class CommentController extends Controller
         $this->CommentServices = $CommentServices;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        dd('hello');
+        try {
+            $comment = $this->CommentServices->search($request->all());
+
+            return self::jsonSuccess(message: '', data: $comment);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function store(IslamicShortStoryRequest $request)

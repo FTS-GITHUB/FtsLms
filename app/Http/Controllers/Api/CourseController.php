@@ -22,7 +22,7 @@ class CourseController extends Controller
         $this->courseServices = $courseServices;
     }
 
-    public function index(CourseRequest $request)
+    public function index(Request $request)
     {
         try {
             $data = $this->courseServices->search($request->all());
@@ -63,7 +63,7 @@ class CourseController extends Controller
     {
     }
 
-    public function update(Request $request, Course $course)
+    public function update(CourseRequest $request, Course $course)
     {
         try {
             $data = $this->courseServices->update($course, $request);

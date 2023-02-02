@@ -91,12 +91,16 @@ class QuestionServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $array = $question['option'];
-
-            $options = implode(',', $array);
-            $options = Option::where('id', $question->options_id)->update([
-                'option' => $options,
+            $questions = Question::where('id', $question->id)->update([
+                'questions' => $request['question'],
             ]);
+            $options = Option::where('id', $question->options_id)->update([
+                'option_a' => $request['option_a'],
+                'option_b' => $request['option_b'],
+                'option_c' => $request['option_c'],
+                'option_d' => $request['option_d'],
+                'correct_option' => $request['correct_option'],
+                'question_id' => $questions->id]);
             if ($options) {
                 $marks = Mark::where('id', $question->marks_id)->update([
                     'mark' => $request->mark,
@@ -146,14 +150,14 @@ class QuestionServices extends BaseServices
                 ]);
                 DB::commit();
 
-                return self::jsonSuccess(message: 'you are great ,  you got 4 marks ', data: 'correct option'.' '.$data->correct_option);
+                return self::jsonSuccess(message: 'you are great ,  you got 4 marks ');
             } else {
                 $data = $data->update([
                     'total_marks' => 0,
                 ]);
                 DB::commit();
 
-                return self::jsonSuccess(message: 'Oh sorry you choose wrong answer, next time better luck!', data:'correct option is'.' '.$data->correct_option);
+                return self::jsonSuccess(message: 'Oh sorry you choose wrong answer, next time better luck!');
             }
         } catch (Exception $exception) {
             DB::rollback();

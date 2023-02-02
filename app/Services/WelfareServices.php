@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\Models\Welfare;
+use App\Notifications\WelfareNotification;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class WelfareServices extends BaseServices
 {
@@ -29,8 +31,6 @@ class WelfareServices extends BaseServices
 
             return self::jsonError($exception->getMessage());
         }
-
-        return $blog;
     }
 
     public function add($request)
@@ -41,10 +41,27 @@ class WelfareServices extends BaseServices
                 'category' => $request['category'],
                 'amount' => $request['amount'],
                 'name' => $request['name'],
+                'email' => $request['email'],
+                'phone' => $request['phone'],
             ]);
+            Notification::send($data, new WelfareNotification($data));
             DB::commit();
 
             return self::jsonSuccess(message: 'Welfare saved successfully!', data: $data);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function show($welfare)
+    {
+        DB::beginTransaction();
+        try {
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $welfare);
         } catch (Exception $exception) {
             DB::rollback();
 

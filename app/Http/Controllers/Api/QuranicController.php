@@ -8,6 +8,7 @@ use App\Models\Quranic;
 use App\Services\QuranicServices;
 use App\Traits\Jsonify;
 use Exception;
+use Illuminate\Http\Request;
 
 class QuranicController extends Controller
 {
@@ -15,13 +16,24 @@ class QuranicController extends Controller
 
     private $quranicService;
 
+    /**
+     * load services when constructor called
+     *
+     * @param  QuranicServices  $quranicService
+     */
     public function __construct(QuranicServices $quranicService)
     {
         parent::__permissions('quranics');
         $this->quranicService = $quranicService;
     }
 
-    public function index(QuranicRequest $request)
+    /**
+     * getting all data from database
+     *
+     * @param  Request  $request
+     * @return void
+     */
+    public function index(Request $request)
     {
         try {
             $data = $this->quranicService->search($request->all());
@@ -32,10 +44,21 @@ class QuranicController extends Controller
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function create()
     {
     }
 
+    /**
+     * create new quranic record
+     *
+     * @param  QuranicRequest  $request
+     * @return void
+     */
     public function store(QuranicRequest $request)
     {
         try {
@@ -47,10 +70,16 @@ class QuranicController extends Controller
         }
     }
 
+    /**
+     * show single data
+     *
+     * @param  Quranic  $quranic
+     * @return void
+     */
     public function show(Quranic $quranic)
     {
         try {
-            return self::jsonSuccess(message: 'Quranic data saved successfully!', data: $quranic);
+            return self::jsonSuccess(message: 'Quranic data saved successfully!', data: $quranic->with('tags')->first());
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -60,6 +89,13 @@ class QuranicController extends Controller
     {
     }
 
+    /**
+     * update quranic record
+     *
+     * @param  QuranicRequest  $request
+     * @param  Quranic  $quranic
+     * @return void
+     */
     public function update(QuranicRequest $request, Quranic $quranic)
     {
         try {
@@ -71,6 +107,12 @@ class QuranicController extends Controller
         }
     }
 
+    /**
+     * delete quranic records
+     *
+     * @param  Quranic  $quranic
+     * @return void
+     */
     public function destroy(Quranic $quranic)
     {
         try {

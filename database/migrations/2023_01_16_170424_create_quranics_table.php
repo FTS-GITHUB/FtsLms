@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('qari_name');
             $table->string('surah_name');
             $table->string('para_number');
+
             $table->timestamps();
         });
     }

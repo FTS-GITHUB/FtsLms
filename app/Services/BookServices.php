@@ -14,17 +14,27 @@ class BookServices extends BaseServices
 {
     use Jsonify;
 
+    /**
+     * constructor function
+     *
+     * @param  Book  $model
+     */
     public function __construct(Book $model)
     {
         parent::__construct($model);
     }
 
+    /**
+     * get all data function
+     *
+     * @param  array  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
         try {
-            $model = $this->model;
-            $model = $this->model->with('image')->paginate(10);
+            $model = $this->model->with(['image', 'category'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: 'Book saved successfully!', data: $model);
@@ -35,6 +45,12 @@ class BookServices extends BaseServices
         }
     }
 
+    /**
+     * create book function
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function create($request)
     {
         DB::beginTransaction();
@@ -66,11 +82,17 @@ class BookServices extends BaseServices
         }
     }
 
+    /**
+     * show single book
+     *
+     * @param [get] $book
+     * @return void
+     */
     public function show($book)
     {
         DB::beginTransaction();
         try {
-            $data = Book::with('category')->find($book);
+            $data = Book::with(['category', 'image'])->find($book);
             DB::commit();
 
             return self::jsonSuccess(data: $data);
@@ -81,6 +103,13 @@ class BookServices extends BaseServices
         }
     }
 
+    /**
+     * update books record
+     *
+     * @param [update] $book
+     * @param [PUT] $request
+     * @return void
+     */
     public function update($book, $request)
     {
         DB::beginTransaction();
@@ -98,8 +127,7 @@ class BookServices extends BaseServices
             ]);
             if ($book) {
                 $data = Image::where('imageable_id', $book->id)->first();
-                dd(Cloudinary::destroy($data->id));
-                if (Cloudinary::destroy($data->id)) {
+                if (Cloudinary::destroy($data->imageable_id)) {
                     $book = Image::create([
                         'url' => cloudinary()->upload($request->file('cover_image_caption')->getRealPath())->getSecurePath(),
                         'imageable_id' => $book->id,
@@ -112,13 +140,18 @@ class BookServices extends BaseServices
 
             return self::jsonSuccess(message: 'Book updated successfully!', data: $data);
         } catch (Exception $exception) {
-            dd($exception);
             DB::rollback();
 
             return self::jsonError($exception->getMessage());
         }
     }
 
+    /**
+     * delete function
+     *
+     * @param [delete] $book
+     * @return void
+     */
     public function delete($book)
     {
         DB::beginTransaction();

@@ -15,12 +15,23 @@ class RoundController extends Controller
 
     private $roundServices;
 
+    /**
+     * load permissions and services
+     *
+     * @param  RoundServices  $roundServices
+     */
     public function __construct(RoundServices $roundServices)
     {
         parent::__permissions('rounds');
         $this->roundServices = $roundServices;
     }
 
+    /**
+     * getting all round data from database
+     *
+     * @param  RoundRequest  $request
+     * @return void
+     */
     public function index(RoundRequest $request)
     {
         try {
@@ -32,10 +43,21 @@ class RoundController extends Controller
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function create()
     {
     }
 
+    /**
+     * add new record to database
+     *
+     * @param  RoundRequest  $request
+     * @return void
+     */
     public function store(RoundRequest $request)
     {
         try {
@@ -47,6 +69,12 @@ class RoundController extends Controller
         }
     }
 
+    /**
+     * show single record from database
+     *
+     * @param  Round  $round
+     * @return void
+     */
     public function show(Round $round)
     {
         try {
@@ -62,6 +90,13 @@ class RoundController extends Controller
     {
     }
 
+    /**
+     * update a round record
+     *
+     * @param  RoundRequest  $request
+     * @param  Round  $round
+     * @return void
+     */
     public function update(RoundRequest $request, Round $round)
     {
         try {
@@ -73,6 +108,12 @@ class RoundController extends Controller
         }
     }
 
+    /**
+     * delete round record
+     *
+     * @param  Round  $round
+     * @return void
+     */
     public function destroy(Round $round)
     {
         try {

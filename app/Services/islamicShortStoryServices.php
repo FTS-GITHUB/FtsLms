@@ -16,6 +16,12 @@ class islamicShortStoryServices extends BaseServices
         parent::__construct($model);
     }
 
+    /**
+     * get all data for a given model
+     *
+     * @param  array  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
@@ -33,6 +39,12 @@ class islamicShortStoryServices extends BaseServices
         }
     }
 
+    /**
+     * show single record 
+     *
+     * @param [get] $id
+     * @return void
+     */
     public function show($id)
     {
         DB::beginTransaction();
@@ -48,6 +60,12 @@ class islamicShortStoryServices extends BaseServices
         }
     }
 
+    /**
+     * create a new short story
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function create($request)
     {
         try {
@@ -63,6 +81,13 @@ class islamicShortStoryServices extends BaseServices
         }
     }
 
+    /**
+     * update a single story
+     *
+     * @param [PUT] $request
+     * @param [data] $data
+     * @return void
+     */
     public function update($request, $data)
     {
         try {

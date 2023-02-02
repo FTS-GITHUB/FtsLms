@@ -22,7 +22,7 @@ class CommentServices extends BaseServices
         try {
             $model = $this->model;
 
-            $model = $this->model->paginate(10);
+            $model = $this->model->with('user:id,name')->paginate(10);
 
             DB::commit();
 

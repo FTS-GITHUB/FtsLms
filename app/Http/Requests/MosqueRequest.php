@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CourseRequest extends FormRequest
+class MosqueRequest extends FormRequest
 {
     use Jsonify;
 
@@ -17,12 +17,10 @@ class CourseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'department_id' => ['required'],
-            'course_code' => ['required', 'string', 'max:255'],
-            'course_name' => ['required', 'string'],
-            'course_credits' => ['required', 'string', 'max:255'],
-            'status' => ['required', 'string', 'max:255'],
-            'course_description' => ['required', 'string', 'max:255'],
+            'masjid_name' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'imame_name' => ['required', 'string', 'max:255'],
+            'notice_board' => 'required',
         ];
     }
 

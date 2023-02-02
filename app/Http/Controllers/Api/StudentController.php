@@ -22,7 +22,13 @@ class StudentController extends Controller
         $this->studentServices = $studentServices;
     }
 
-    public function index(StudentRequest $request)
+    /**
+     * get all students
+     *
+     * @param  StudentRequest  $request
+     * @return void
+     */
+    public function index(Request $request)
     {
         try {
             $data = $this->studentServices->search($request->all());
@@ -37,7 +43,13 @@ class StudentController extends Controller
     {
     }
 
-    public function store(Request $request)
+    /**
+     * create a new student
+     *
+     * @param  Request  $request
+     * @return void
+     */
+    public function store(StudentRequest $request)
     {
         try {
             $data = $this->studentServices->create($request->all());

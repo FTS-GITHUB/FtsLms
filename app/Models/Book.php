@@ -11,7 +11,7 @@ class Book extends Model
 
     public $guarded = [];
 
-    public function category()
+    public function categories()
     {
         return $this->belongsTo(Category::class);
     }

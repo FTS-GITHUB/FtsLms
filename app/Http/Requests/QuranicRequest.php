@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Traits\Jsonify;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
 class QuranicRequest extends FormRequest
 {
@@ -17,7 +16,13 @@ class QuranicRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'qari_name' => ['required', 'string'],
+            'surah_name' => ['required', 'string', 'max:255'],
+            'para_number' => ['required', 'string'],
+            'tag_name' => ['required', 'string', 'max:255'],
+            ['audio' => 'required|mimes:application/octet-stream,audio/mpeg,mpga,mp3,wav'],
+        ];
     }
 
     protected function failedValidation(Validator $validator)
