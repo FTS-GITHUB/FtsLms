@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\IslamicShortStoryRequest;
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Services\CommentServices;
 use App\Traits\Jsonify;
@@ -33,7 +33,7 @@ class CommentController extends Controller
         }
     }
 
-    public function store(IslamicShortStoryRequest $request)
+    public function store(CommentRequest $request)
     {
         try {
             $comment = $this->CommentServices->create($request);
@@ -54,6 +54,28 @@ class CommentController extends Controller
             $replies = $this->CommentServices->replies($request);
 
             return self::jsonSuccess(message: 'replies saved successfully!', data: $replies);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function react(Request $request, $id)
+    {
+        try {
+            $data = $this->CommentServices->react($request, $id);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function disReact($id)
+    {
+        try {
+            $data = $this->CommentServices->disReact($id);
+
+            return self::jsonSuccess(message: '', data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

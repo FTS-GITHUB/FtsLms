@@ -34,7 +34,7 @@ class BookServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $model = $this->model->with(['image', 'category'])->paginate(10);
+            $model = $this->model->with(['image', 'categories'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: 'Book saved successfully!', data: $model);
@@ -165,6 +165,128 @@ class BookServices extends BaseServices
             DB::commit();
 
             return self::jsonSuccess(message: 'Book deleted successfully!', data: $book);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function addToCart($id)
+    {
+        DB::beginTransaction();
+        try {
+            $book = Book::where('status', 'pro')->find($id);
+            if (! $book) {
+                abort(404);
+            }
+            $cart = session()->get('cart');
+            // if cart is empty then this this the first book
+            if (! $cart) {
+                $cart = [
+                    $id => [
+                        'title' => $book->title,
+                        'author' => $book->author,
+                        'quantity' => 1,
+                        'price' => $book->book_price,
+                        'photo' => $book->cover_image_caption,
+
+                    ],
+                ];
+                session()->put('cart', $cart);
+
+                return self::jsonSuccess(message: 'Book added to cart successfully', data: $book);
+            }
+            // if cart not empty then check if this book is already in the cart then increament the quantity
+            if (isset($cart[$id])) {
+                $cart[$id]['quantity']++;
+                session()->put('cart', $cart);
+
+                return self::jsonSuccess(message: 'Book added to cart successfully', data: $book);
+            }
+            // if book not exists in cart then add to cart with quantity = 1
+            $cart[$id] = [
+                'name' => $book->name,
+                'quantity' => 1,
+                'price' => $book->book_price,
+                'photo' => $book->cover_image_caption,
+            ];
+            session()->put('cart', $cart);
+            DB::commit();
+
+            return self::jsonSuccess(message: 'Book added to cart successfully!', data: $book);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function updateCart($request)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->id and $request->quantity) {
+                $cart = session()->get('cart');
+                $cart[$request->id]['quantity'] = $request->quantity;
+                session()->put('cart', $cart);
+            }
+
+            return self::jsonSuccess(message: 'Cart updated successfully!');
+
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function remove($request)
+    {
+        DB::beginTransaction();
+        try {
+            if ($request->id) {
+                $cart = session()->get('cart');
+                if (isset($cart[$request->id])) {
+                    unset($cart[$request->id]);
+                    session()->put('cart', $cart);
+                }
+            }
+
+            return self::jsonSuccess(message: 'book removed from cart successfully');
+
+            DB::commit();
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function proBook($params = [])
+    {
+        DB::beginTransaction();
+        try {
+            $model = $this->model->where('status', 'pro')->paginate(10);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $model);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function freeBook($params = [])
+    {
+        DB::beginTransaction();
+        try {
+            $model = $this->model->where('status', 'free')->paginate(10);
+            DB::commit();
+
+            return self::jsonSuccess(message: '', data: $model);
         } catch (Exception $exception) {
             DB::rollback();
 

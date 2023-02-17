@@ -2,24 +2,22 @@
 
 namespace App\Services;
 
-use App\Models\Blog;
-use App\Models\Image;
+use App\Models\Marquee;
 use App\Traits\Jsonify;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class BlogServices extends BaseServices
+class MarqueeServices extends BaseServices
 {
     use Jsonify;
 
-    public function __construct(Blog $model)
+    public function __construct(Marquee $model)
     {
         parent::__construct($model);
     }
 
     /**
-     * get all blog posts from database
+     * get all marquee posts from database
      *
      * @param  array  $params
      * @return void
@@ -28,10 +26,11 @@ class BlogServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $blog = Blog::with(['user:id,name', 'comments', 'image'])->where('status', 'approved')->paginate(10);
+            $data = $this->model;
+            $data = $this->model->paginate(10);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $blog);
+            return self::jsonSuccess(message: '', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -40,7 +39,7 @@ class BlogServices extends BaseServices
     }
 
     /**
-     * add a blog entry to the database
+     * add a marquee entry to the database
      *
      * @param [post] $request
      * @return void
@@ -49,22 +48,9 @@ class BlogServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $id = Auth::id();
-            $data = Blog::create([
-                'title' => $request->title,
-                'slug' => str_slug($request->title),
-                'content' => $request->content,
-                'status' => 'pending',
-                'user_id' => $id,
-            ]);
-            $blog = Image::create([
-                'url' => cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath(),
-                'imageable_id' => $data->id,
-                'imageable_type' => \App\Models\Blog::class,
-            ]);
             DB::commit();
 
-            return self::jsonSuccess(message: 'Blog saved successfully!', data: $data);
+            return self::jsonSuccess(message: 'Heading update successfully!', data: '');
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -79,14 +65,14 @@ class BlogServices extends BaseServices
      * @param [put] $request
      * @return void
      */
-    public function update($blog, $request)
+    public function update($marquee, $request)
     {
         DB::beginTransaction();
         try {
-            $blog = $blog->update($request->all());
+            $data = $marquee->update($request->all());
             DB::commit();
 
-            return self::jsonSuccess(message: 'Blog updated successfully!', data: $blog);
+            return self::jsonSuccess(message: 'Blog updated successfully!', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -104,12 +90,10 @@ class BlogServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            if ($blog->delete()) {
-                Image::where('imageable_id', $blog->id)->delete();
-            }
+            $blog = $blog->delete();
             DB::commit();
 
-            return self::jsonSuccess(message: 'Blog deleted successfully!');
+            return self::jsonSuccess(message: 'Heading deleted successfully!');
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -127,12 +111,16 @@ class BlogServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $approved = Blog::with('user:id,name')->find($id);
-            $approved->status = 'approved';
+            $approved = Marquee::find($id);
+            if ($approved->status == 'pending') {
+                $approved->status = 'approved';
+            } else {
+                $approved->status = 'pending';
+            }
             if ($approved->save()) {
                 DB::commit();
 
-                return self::jsonSuccess(message: 'Blog approved successfully!', data: $approved);
+                return self::jsonSuccess(message: 'Header approved successfully!', data: $approved);
             }
         } catch (Exception $exception) {
             DB::rollback();

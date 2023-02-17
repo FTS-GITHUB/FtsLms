@@ -2,12 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Newsletter;
 use App\Traits\Jsonify;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class BlogRequest extends FormRequest
+class NewsletterRequest extends FormRequest
 {
     use Jsonify;
 
@@ -17,8 +18,7 @@ class BlogRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['required', 'string'],
-            'title' => ['required', 'string'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.Newsletter::class],
         ];
     }
 

@@ -18,7 +18,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->email)->first();
         if (! $user) {
             return response()->json([
-                'message' => 'we have sent you a varification code to your email address',
+                'message' => 'This email does not exist in our records.',
                 'status_code' => 200,
             ], 200);
         } else {

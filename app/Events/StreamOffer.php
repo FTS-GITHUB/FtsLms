@@ -31,6 +31,7 @@ class StreamOffer
      */
     public function broadcastOn(): Channel|array
     {
+        
         return  new PrivateChannel('stream-signal-channel.'.$this->data['receiver']['id']);
     }
 }

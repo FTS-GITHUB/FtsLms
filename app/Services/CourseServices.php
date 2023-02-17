@@ -34,7 +34,7 @@ class CourseServices extends BaseServices
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model = $this->model->with('department')->paginate(10);
+            $model = $this->model->with(['department', 'teachers', 'courses'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);

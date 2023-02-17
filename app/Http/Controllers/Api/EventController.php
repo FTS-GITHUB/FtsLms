@@ -96,8 +96,12 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        $event = $event->delete();
+        try {
+            $event = $event->delete();
 
-        return response()->json($event);
+            return self::jsonSuccess(message: 'Data deleted successfully!', data: $event);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 }

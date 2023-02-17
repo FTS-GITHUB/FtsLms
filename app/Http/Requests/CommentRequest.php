@@ -17,9 +17,9 @@ class CommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string', 'max:255'],
-            'blog_id' => ['required', 'string', 'max:255'],
+            'user_id' => ['required'],
+            'blog_id' => ['required'],
+            'body' => ['required', 'string', 'max:255'],
 
         ];
     }

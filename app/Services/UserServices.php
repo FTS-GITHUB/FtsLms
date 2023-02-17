@@ -101,7 +101,7 @@ class UserServices extends BaseServices
         DB::beginTransaction();
         try {
             $user = $this->findById($id);
-
+            dd($user);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $user);

@@ -38,4 +38,9 @@ class Blog extends Model
     {
         return $this->morphOne(Tag::class, 'taggable');
     }
+
+    public function reacts()
+    {
+        return $this->morphMany(React::class, 'reactable');
+    }
 }

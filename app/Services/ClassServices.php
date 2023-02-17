@@ -20,10 +20,11 @@ class ClassServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $data = $this->model->with(['departments', 'courses'])->paginate(10);
+            $model = $this->model;
+            $model = $this->model->with(['departments', 'courses'])->paginate(10);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: '', data: $model);
         } catch (Exception $exception) {
             DB::rollback();
 

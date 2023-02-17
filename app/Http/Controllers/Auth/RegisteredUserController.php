@@ -30,7 +30,7 @@ class RegisteredUserController extends Controller
             auth()->user()->tokens()->delete();
         }
 
-        $user->token = $user->createToken('auth')->plainTextToken;
+        // $user->token = $user->createToken('auth')->plainTextToken;
 
         return self::jsonSuccess(message: 'User registered successfully.', data: $user);
     }

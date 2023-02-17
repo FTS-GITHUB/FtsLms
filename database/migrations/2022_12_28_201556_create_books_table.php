@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('cover_image_caption');
             $table->string('category');
             $table->text('description')->nullable();
-            $table->text('book_price');
+            $table->decimal('book_price', 6, 2);
             $table->text('remarks')->nullable();
             $table->text('status');
             $table->timestamps();

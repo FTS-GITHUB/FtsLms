@@ -11,7 +11,7 @@ class ClassAllocate extends Model
 
     public $guarded = [];
 
-    public function department()
+    public function departments()
     {
         return $this->belongsTo(Department::class);
     }

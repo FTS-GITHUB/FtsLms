@@ -34,8 +34,8 @@ class RoleController extends Controller
         try {
             $role = Role::create($request->safe()->only('name'));
 
-            if ($request->safe()->has('permissions')) {
-                $role->givePermissionTo($request->safe()->only('permissions'));
+            if ($request->permission) {
+                $role->syncPermissions($request->permission);
             }
             DB::commit();
 

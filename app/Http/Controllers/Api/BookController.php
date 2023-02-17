@@ -84,4 +84,59 @@ class BookController extends Controller
             return self::jsonError($exception->getMessage());
         }
     }
+
+    public function addToCart($id)
+    {
+        try {
+            $data = $this->bookServices->addToCart($id);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function updateCart(Request $request)
+    {
+        try {
+            $data = $this->bookServices->updateCart($request);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function removeCart(Request $request)
+    {
+        try {
+            $data = $this->bookServices->remove($request);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function proBook(Request $request)
+    {
+        try {
+            $data = $this->bookServices->proBook($request->all());
+
+            return self::jsonSuccess(data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function freeBook(Request $request)
+    {
+        try {
+            $data = $this->bookServices->freeBook($request->all());
+
+            return self::jsonSuccess(data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
 }
