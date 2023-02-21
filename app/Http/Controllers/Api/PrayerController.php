@@ -84,4 +84,15 @@ class PrayerController extends Controller
             return self::jsonError($exception->getMessage());
         }
     }
+
+    public function prayerTime()
+    {
+        try {
+            $data = $this->prayerServices->prayerTime();
+
+            return self::jsonSuccess('record deleted', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
 }

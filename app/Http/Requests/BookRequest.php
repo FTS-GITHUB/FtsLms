@@ -23,7 +23,7 @@ class BookRequest extends FormRequest
             'publisher' => ['required', 'string', 'max:255'],
             'upload_book' => 'required',
             'cover_image_caption' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'category' => ['required', 'string'],
+            'category_id' => ['required'],
             'description' => ['required', 'string', 'max:255'],
             'remarks' => ['required', 'string'],
             'book_price' => ['required', 'string', 'max:255'],

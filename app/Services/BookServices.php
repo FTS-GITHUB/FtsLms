@@ -60,15 +60,14 @@ class BookServices extends BaseServices
                 'author' => $request->author,
                 'publisher' => $request->publisher,
                 'upload_book' => $request->file('upload_book')->store('books'),
-                'cover_image_caption' => $request->file('cover_image_caption')->store('cover_image_caption'),
-                'category' => $request->category,
+                'category_id' => $request->category_id,
                 'description' => $request->description,
                 'remarks' => $request->remarks,
                 'book_price' => $request->book_price,
                 'status' => $request->status,
             ]);
             $book = Image::create([
-                'url' => cloudinary()->upload($request->file('cover_image_caption')->getRealPath())->getSecurePath(),
+                'url' => $request->file('cover_image_caption')->store('cover_image_caption'),
                 'imageable_id' => $book->id,
                 'imageable_type' => \App\Models\Book::class,
             ]);

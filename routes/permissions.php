@@ -62,6 +62,8 @@ Route::group([
     Route::apiResource('/prayers', PrayerController::class);
     Route::apiResource('/courses', CourseController::class);
 
+    Route::get('/prayer-time', [PrayerController::class, 'prayerTime']);
+
     Route::apiResource('/students', StudentController::class);
     Route::apiResource('/welfares', WelfareController::class);
     Route::apiResource('/quranics', QuranicController::class);

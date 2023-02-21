@@ -123,4 +123,19 @@ class prayerServices extends BaseServices
             return self::jsonError($exception->getMessage());
         }
     }
+
+    public function prayerTime()
+    {
+        DB::beginTransaction();
+        try {
+            $data = new Client(['http://api.aladhan.com/v1/calendar']);
+            DB::commit();
+
+            return self::jsonSuccess(message: 'prayer updated successfully!', data:$prayer);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
 }

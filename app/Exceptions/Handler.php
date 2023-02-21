@@ -3,8 +3,8 @@
 namespace App\Exceptions;
 
 use App\Traits\Jsonify;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Stripe\Exception\CardException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -54,8 +54,9 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AccessDeniedHttpException $e, $request) {
             return self::jsonError(message: 'This action is unauthorized.', code: 403);
         });
-        $this->renderable(function (CardException $e, $request) {
-            return self::jsonError(message: 'Cannot charge a customer that has no active card.', code: 500);
+
+        $this->renderable(function (QueryException $e, $request) {
+            return self::jsonError(message: 'Column not found', code: 500);
         });
     }
 }
