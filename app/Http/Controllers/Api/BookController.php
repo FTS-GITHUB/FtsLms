@@ -63,12 +63,12 @@ class BookController extends Controller
     {
     }
 
-    public function update(Request $request, Book $book)
+    public function update(BookRequest $request, Book $book)
     {
         try {
             $data = $this->bookServices->update($book, $request);
 
-            return self::jsonSuccess(message: 'book updated', data: $data);
+            return self::jsonSuccess(message: 'Book update successfully!', data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -80,6 +80,61 @@ class BookController extends Controller
             $data = $this->bookServices->delete($book);
 
             return self::jsonSuccess(message: 'book deleted', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function addToCart($id)
+    {
+        try {
+            $data = $this->bookServices->addToCart($id);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function updateCart(Request $request)
+    {
+        try {
+            $data = $this->bookServices->updateCart($request);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function removeCart(Request $request)
+    {
+        try {
+            $data = $this->bookServices->remove($request);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function proBook(Request $request)
+    {
+        try {
+            $data = $this->bookServices->proBook($request->all());
+
+            return self::jsonSuccess(data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function freeBook(Request $request)
+    {
+        try {
+            $data = $this->bookServices->freeBook($request->all());
+
+            return self::jsonSuccess(data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

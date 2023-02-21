@@ -22,7 +22,7 @@ class CourseController extends Controller
         $this->courseServices = $courseServices;
     }
 
-    public function index(CourseRequest $request)
+    public function index(Request $request)
     {
         try {
             $data = $this->courseServices->search($request->all());
@@ -63,7 +63,7 @@ class CourseController extends Controller
     {
     }
 
-    public function update(Request $request, Course $course)
+    public function update(CourseRequest $request, Course $course)
     {
         try {
             $data = $this->courseServices->update($course, $request);
@@ -85,10 +85,10 @@ class CourseController extends Controller
         }
     }
 
-    public function proCourse(CourseRequest $request)
+    public function proCourse()
     {
         try {
-            $data = $this->courseServices->pro($request->all());
+            $data = $this->courseServices->pro();
 
             return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
         } catch (Exception $exception) {
@@ -96,10 +96,10 @@ class CourseController extends Controller
         }
     }
 
-    public function freeCourse(CourseRequest $request)
+    public function freeCourse()
     {
         try {
-            $data = $this->courseServices->free($request->all());
+            $data = $this->courseServices->free();
 
             return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
         } catch (Exception $exception) {

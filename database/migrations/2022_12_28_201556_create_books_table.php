@@ -14,10 +14,10 @@ return new class extends Migration
             $table->string('author');
             $table->string('publisher');
             $table->text('upload_book');
-            $table->text('cover_image_caption');
-            $table->string('category');
+            $table->unsignedBigInteger('category_id');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
             $table->text('description')->nullable();
-            $table->text('book_price');
+            $table->decimal('book_price', 6, 2);
             $table->text('remarks')->nullable();
             $table->text('status');
             $table->timestamps();

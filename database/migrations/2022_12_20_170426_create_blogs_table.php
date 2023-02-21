@@ -14,7 +14,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('content')->nullable();
-            $table->text('status');
+            $table->string('status')->default('pending');
             $table->text('file')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

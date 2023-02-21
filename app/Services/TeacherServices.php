@@ -16,6 +16,12 @@ class TeacherServices extends BaseServices
         parent::__construct($model);
     }
 
+    /**
+     * geting all data from model
+     *
+     * @param  array  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
@@ -32,6 +38,12 @@ class TeacherServices extends BaseServices
         }
     }
 
+    /**
+     * single record display by id
+     *
+     * @param [get] $id
+     * @return void
+     */
     public function show($id)
     {
         DB::beginTransaction();
@@ -47,6 +59,12 @@ class TeacherServices extends BaseServices
         }
     }
 
+    /**
+     * create a new teacher record
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function add($request)
     {
         DB::beginTransaction();
@@ -60,7 +78,7 @@ class TeacherServices extends BaseServices
             ]);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: 'teacher saved successfully!', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -68,14 +86,27 @@ class TeacherServices extends BaseServices
         }
     }
 
+    /**
+     * update teacher record by id
+     *
+     * @param [update] $teacher
+     * @param [PUT] $request
+     * @return void
+     */
     public function update($teacher, $request)
     {
         DB::beginTransaction();
         try {
-            $data = $teacher->update($request->all());
+            $data = $teacher->update([
+                'name' => $request['name'],
+                'address' => $request['address'],
+                'email' => $request['email'],
+                'contact_no' => $request['contact_no'],
+                'designation' => $request['designation'],
+            ]);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: 'teacher data updated', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -83,6 +114,12 @@ class TeacherServices extends BaseServices
         }
     }
 
+   /**
+    * delete teacher data from database
+    *
+    * @param [delete] $teacher
+    * @return void
+    */
    public function destroy($teacher)
    {
        DB::beginTransaction();

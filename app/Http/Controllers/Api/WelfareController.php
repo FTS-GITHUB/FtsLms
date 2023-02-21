@@ -8,6 +8,7 @@ use App\Models\Welfare;
 use App\Services\WelfareServices;
 use App\Traits\Jsonify;
 use Exception;
+use Illuminate\Http\Request;
 
 class WelfareController extends Controller
 {
@@ -21,7 +22,13 @@ class WelfareController extends Controller
         $this->welfareServices = $welfareServices;
     }
 
-    public function index(WelfareRequest $request)
+    /**
+     * getting welfares data from database
+     *
+     * @param  Request  $request
+     * @return void
+     */
+    public function index(Request $request)
     {
         try {
             $data = $this->welfareServices->search($request->all());
@@ -36,6 +43,12 @@ class WelfareController extends Controller
     {
     }
 
+    /**
+     * create a new welfare data
+     *
+     * @param  WelfareRequest  $request
+     * @return void
+     */
     public function store(WelfareRequest $request)
     {
         try {
@@ -47,6 +60,12 @@ class WelfareController extends Controller
         }
     }
 
+    /**
+     * display single welfare record from database
+     *
+     * @param  Welfare  $welfare
+     * @return void
+     */
     public function show(Welfare $welfare)
     {
         try {
@@ -62,6 +81,13 @@ class WelfareController extends Controller
     {
     }
 
+    /**
+     * update single record from database
+     *
+     * @param  WelfareRequest  $request
+     * @param  Welfare  $welfare
+     * @return void
+     */
     public function update(WelfareRequest $request, Welfare $welfare)
     {
         try {
@@ -73,6 +99,12 @@ class WelfareController extends Controller
         }
     }
 
+    /**
+     * delete record from database
+     *
+     * @param  Welfare  $welfare
+     * @return void
+     */
     public function destroy(Welfare $welfare)
     {
         try {

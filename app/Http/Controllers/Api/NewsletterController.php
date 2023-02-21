@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\NewsletterRequest;
 use App\Models\Newsletter;
 use App\Traits\Jsonify;
 use Exception;
@@ -12,11 +13,6 @@ use Illuminate\Support\Facades\Mail;
 class NewsletterController extends Controller
 {
     use Jsonify;
-
-    public function __construct()
-    {
-        parent::__permissions('newsletter');
-    }
 
     /**
      * Display a listing of the resource.
@@ -50,12 +46,9 @@ class NewsletterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(NewsletterRequest $request)
     {
         try {
-            $request->validate([
-                'email' => ['required', 'string', 'email', 'max:255'],
-            ]);
             $newsletter = Newsletter::create([
                 'email' => $request->email,
                 'status' => true,
@@ -125,16 +118,17 @@ class NewsletterController extends Controller
         //
     }
 
-    public function un_subscribe(Request $request)
+    public function un_subscribe(NewsletterRequest $request)
     {
         try {
             $subscription = Newsletter::where('email', $request->email)->first();
             if ($subscription) {
-                $subscription->status = 'false';
-                $subscription->save();
-            }
+                $subscription->delete();
 
-            return self::jsonSuccess(data:$subscription, message: 'Un-subscription  successfully.');
+                return self::jsonSuccess(message: 'Un-subscription  successfully.');
+            } else {
+                return self::jsonSuccess(message: 'Already un-subscription  successfully.');
+            }
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

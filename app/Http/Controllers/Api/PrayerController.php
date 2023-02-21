@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PrayerRequest;
 use App\Models\Prayer;
 use App\Services\prayerServices;
 use App\Traits\Jsonify;
@@ -36,7 +37,7 @@ class PrayerController extends Controller
     {
     }
 
-    public function store(Request $request)
+    public function store(PrayerRequest $request)
     {
         try {
             $data = $this->prayerServices->add($request);
@@ -77,6 +78,17 @@ class PrayerController extends Controller
     {
         try {
             $data = $this->prayerServices->delete($prayer);
+
+            return self::jsonSuccess('record deleted', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function prayerTime()
+    {
+        try {
+            $data = $this->prayerServices->prayerTime();
 
             return self::jsonSuccess('record deleted', data: $data);
         } catch (Exception $exception) {

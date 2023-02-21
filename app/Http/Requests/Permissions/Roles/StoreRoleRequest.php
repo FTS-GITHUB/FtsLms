@@ -6,7 +6,6 @@ use App\Traits\Jsonify;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
 class StoreRoleRequest extends FormRequest
 {
@@ -19,7 +18,7 @@ class StoreRoleRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'unique:roles,name'],
-            'permissions' => ['nullable', 'array'],
+            'permissions' => ['required', 'array'],
             'permissions.*' => ['exists:permissions,id'],
         ];
     }

@@ -18,6 +18,12 @@ class StudentServices extends BaseServices
         parent::__construct($model);
     }
 
+    /**
+     * get all students record from database with pagination
+     *
+     * @param  array  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
@@ -34,6 +40,12 @@ class StudentServices extends BaseServices
         }
     }
 
+    /**
+     * show single student record from database by using id
+     *
+     * @param [get] $id
+     * @return void
+     */
     public function show($id)
     {
         DB::beginTransaction();
@@ -50,6 +62,12 @@ class StudentServices extends BaseServices
         }
     }
 
+    /**
+     * create a new student record
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function create($request)
     {
         DB::beginTransaction();
@@ -72,6 +90,13 @@ class StudentServices extends BaseServices
         }
     }
 
+    /**
+     * update student record by using id
+     *
+     * @param [update] $model
+     * @param [put] $request
+     * @return void
+     */
     public function update($model, $request)
     {
         DB::beginTransaction();
@@ -87,6 +112,12 @@ class StudentServices extends BaseServices
         }
     }
 
+   /**
+    * delete a student record from the database
+    *
+    * @param [delete] $student
+    * @return void
+    */
    public function destroy($student)
    {
        DB::beginTransaction();

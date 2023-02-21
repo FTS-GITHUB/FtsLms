@@ -22,4 +22,9 @@ class Comment extends Model
     {
         return $this->hasMany(Comment::class, 'parent_id');
     }
+
+    public function reacts()
+    {
+        return $this->morphMany(React::class, 'reactable');
+    }
 }

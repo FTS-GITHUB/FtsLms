@@ -3,10 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Traits\Jsonify;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
 class DepartmentRequest extends FormRequest
 {
@@ -17,7 +16,10 @@ class DepartmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [];
+        return [
+            'department_code' => ['required', 'string', 'max:255'],
+            'department_name' => ['required', 'string', 'max:255'],
+        ];
     }
 
     protected function failedValidation(Validator $validator)

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MosqueRequest;
 use App\Models\Mosque;
 use App\Services\MosqueServices;
 use App\Traits\Jsonify;
@@ -36,7 +37,7 @@ class MosqueController extends Controller
     {
     }
 
-    public function store(Request $request)
+    public function store(MosqueRequest $request)
     {
         try {
             $data = $this->mosqueServices->add($request);
@@ -62,7 +63,7 @@ class MosqueController extends Controller
     {
     }
 
-    public function update(Request $request, Mosque $mosque)
+    public function update(MosqueRequest $request, Mosque $mosque)
     {
         try {
             $data = $this->mosqueServices->update($mosque, $request);

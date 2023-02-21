@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\NewsletterController;
-use App\Http\Controllers\Auth\{ForgotPasswordController};
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,15 +20,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/forgot-password', [ForgotPasswordController::class, 'resetPasswordRequest']);
 
-Route::post('/forgot-password', [ForgotPasswordController::class, 'resetPasswordRequest'])->middleware('guest')->name('password.email');
 Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->middleware('guest')->name('reset-password');
+Route::post('/login', [AuthController::class, 'login']);
 
 Route::group([
     'middleware' => 'auth:sanctum',
 ], function () {
-    Route::resource('/newsletter', NewsletterController::class);
-    Route::post('/un-subscribe', [NewsletterController::class, 'un_subscribe']);
 });
 
 /* ------------ AUTH ------------ */
@@ -35,3 +35,5 @@ require __DIR__.'/auth.php';
 
 /* ------------ Roles & Permissions --------- */
 require __DIR__.'/permissions.php';
+Route::resource('/newsletter', NewsletterController::class);
+Route::post('/un-subscribe', [NewsletterController::class, 'un_subscribe']);

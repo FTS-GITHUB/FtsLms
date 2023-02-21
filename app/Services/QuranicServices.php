@@ -22,10 +22,10 @@ class QuranicServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $data = $this->model->paginate(10);
+            $model = $this->model->with(['tags'])->paginate(10);
             DB::commit();
 
-            return self::jsonSuccess(message: '', data: $data);
+            return self::jsonSuccess(message: '', data: $model);
         } catch (Exception $exception) {
             DB::rollback();
 
@@ -45,9 +45,9 @@ class QuranicServices extends BaseServices
             $file = $request->file('audio')->store('audio');
             $data = Tag::create([
                 'url' => $file,
-                'tagable_id' => $data->id,
+                'taggable_id' => $data->id,
                 'tag_name' => $request['tag_name'],
-                'tagable_type' => \App\Models\Quranic::class,
+                'taggable_type' => \App\Models\Quranic::class,
             ]);
             DB::commit();
 
@@ -63,7 +63,20 @@ class QuranicServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $data = $quranic->update($request->all());
+            $data = $quranic->update([
+                'qari_name' => $request['qari_name'],
+                'surah_name' => $request['surah_name'],
+                'para_number' => $request['para_number'],
+            ]);
+            if ($request->hasFile('audio')) {
+                $file = $request->file('audio')->store('audio');
+                $data = Tag::create([
+                    'url' => $file,
+                    'tagable_id' => $data->id,
+                    'tag_name' => $request['tag_name'],
+                    'tagable_type' => \App\Models\Quranic::class,
+                ]);
+            }
             DB::commit();
 
             return self::jsonSuccess(message: 'Quranic data updated successfully!', data: $data);

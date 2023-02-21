@@ -21,8 +21,13 @@ class DepartmentController extends Controller
         parent::__permissions('departments');
         $this->departmentServices = $departmentServices;
     }
-
-    public function index(DepartmentRequest $request)
+/**
+ * getting all department data from database
+ *
+ * @param Request $request
+ * @return void
+ */
+    public function index(Request $request)
     {
         try {
             $data = $this->departmentServices->search($request);
@@ -33,11 +38,16 @@ class DepartmentController extends Controller
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
     public function create()
     {
     }
 
-    public function store(Request $request)
+    public function store(DepartmentRequest $request)
     {
         try {
             $data = $this->departmentServices->add($request);
@@ -61,7 +71,7 @@ class DepartmentController extends Controller
     {
     }
 
-    public function update(Request $request, Department $department)
+    public function update(DepartmentRequest $request, Department $department)
     {
         try {
             $data = $this->departmentServices->update($department, $request);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Traits\Jsonify;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,15 +15,19 @@ class AuthenticatedSessionController extends Controller
 
     public function store(LoginRequest $request)
     {
-        if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return self::jsonError(message: 'Incorrect email or password.', code: 401);
+        try {
+            if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+                return self::jsonError(message: 'Incorrect email or password.', code: 401);
+            }
+
+            $user = $request->user();
+
+            $user->token = $user->createToken($request->token_name ?? 'authenticated');
+
+            return self::jsonSuccess(message: 'User logged in successfully.', data: $user, code: 200);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
         }
-
-        $user = $request->user();
-
-        $user->token = $user->createToken($request->token_name ?? 'authenticated');
-
-        return self::jsonSuccess(message: 'User logged in successfully.', data: $user, code: 200);
     }
 
     public function destroy(Request $request)

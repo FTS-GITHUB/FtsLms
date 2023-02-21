@@ -13,17 +13,28 @@ class CourseServices extends BaseServices
 
     protected $model;
 
+    /**
+     * mdoel load when constructor is called
+     *
+     * @param  Course  $model
+     */
     public function __construct(Course $model)
     {
         parent::__construct($model);
     }
 
+    /**
+     * get all courses from database
+     *
+     * @param  get  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model = $this->model->with('department')->paginate(10);
+            $model = $this->model->with(['department', 'teachers', 'courses'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -34,6 +45,12 @@ class CourseServices extends BaseServices
         }
     }
 
+    /**
+     * getting single  courses from database
+     *
+     * @param [Course] $course
+     * @return void
+     */
     public function show($course)
     {
         DB::beginTransaction();
@@ -49,6 +66,12 @@ class CourseServices extends BaseServices
         }
     }
 
+    /**
+     * create a new Course object from
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function create($request)
     {
         DB::beginTransaction();
@@ -72,6 +95,13 @@ class CourseServices extends BaseServices
         }
     }
 
+    /**
+     * update course
+     *
+     * @param [course] $model
+     * @param [put] $request
+     * @return void
+     */
     public function update($model, $request)
     {
         DB::beginTransaction();
@@ -87,6 +117,12 @@ class CourseServices extends BaseServices
         }
     }
 
+   /**
+    * delete course by id
+    *
+    * @param [delete] $course
+    * @return void
+    */
    public function delete($course)
    {
        DB::beginTransaction();
@@ -102,6 +138,11 @@ class CourseServices extends BaseServices
        }
    }
 
+   /**
+    * pro courses retrived from database
+    *
+    * @return void
+    */
    public function pro()
    {
        DB::beginTransaction();
@@ -117,6 +158,11 @@ class CourseServices extends BaseServices
        }
    }
 
+   /**
+    * free courses retrived from database
+    *
+    * @return void
+    */
    public function free()
    {
        DB::beginTransaction();

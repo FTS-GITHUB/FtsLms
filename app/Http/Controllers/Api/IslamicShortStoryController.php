@@ -37,7 +37,7 @@ class IslamicShortStoryController extends Controller
     {
     }
 
-    public function store(Request $request)
+    public function store(IslamicShortStoryRequest $request)
     {
         try {
             $islamicShortStory = $this->islamicShortStoryServices->create($request);

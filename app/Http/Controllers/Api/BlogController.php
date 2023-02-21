@@ -51,7 +51,9 @@ class BlogController extends Controller
     public function show(Blog $blog)
     {
         try {
-            return self::jsonSuccess(message: 'Blog saved successfully!', data: $blog);
+            $data = $blog->select('id', 'title', 'slug', 'content', 'status', 'file')->first();
+
+            return self::jsonSuccess(message: 'Blog saved successfully!', data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

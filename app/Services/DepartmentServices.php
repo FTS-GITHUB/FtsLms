@@ -11,11 +11,22 @@ class DepartmentServices extends BaseServices
 {
     use Jsonify;
 
+    /**
+     * load the department model when call class constructor
+     *
+     * @param  Department  $model
+     */
     public function __construct(Department $model)
     {
         parent::__construct($model);
     }
 
+    /**
+     * getting all data from database
+     *
+     * @param  array  $params
+     * @return void
+     */
     public function search($params = [])
     {
         DB::beginTransaction();
@@ -31,6 +42,12 @@ class DepartmentServices extends BaseServices
         }
     }
 
+    /**
+     * create a new record of ddepartment
+     *
+     * @param [post] $request
+     * @return void
+     */
     public function add($request)
     {
         DB::beginTransaction();
@@ -50,6 +67,13 @@ class DepartmentServices extends BaseServices
         }
     }
 
+    /**
+     * update record in database
+     *
+     * @param [demapartment] $model
+     * @param [put] $request
+     * @return void
+     */
     public function update($model, $request)
     {
         DB::beginTransaction();
@@ -65,6 +89,12 @@ class DepartmentServices extends BaseServices
         }
     }
 
+    /**
+     * delete a department from the database
+     *
+     * @param [delete] $department
+     * @return void
+     */
     public function delete($department)
     {
         DB::beginTransaction();

@@ -11,11 +11,7 @@ class Book extends Model
 
     public $guarded = [];
 
-    protected $fillable = [
-        'title', 'author', 'publisher', 'category', 'upload_book', 'description', 'book_price', 'cover_image_caption', 'remarks', 'status',
-    ];
-
-    public function category()
+    public function categories()
     {
         return $this->belongsTo(Category::class);
     }
