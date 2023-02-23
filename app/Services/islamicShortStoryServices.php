@@ -40,7 +40,7 @@ class islamicShortStoryServices extends BaseServices
     }
 
     /**
-     * show single record 
+     * show single record
      *
      * @param [get] $id
      * @return void
@@ -95,7 +95,7 @@ class islamicShortStoryServices extends BaseServices
 
             $input = IslamicShortStory::where('id', $data['id'])->update($input);
 
-            return self::jsonSuccess(message: '', data: $input);
+            return self::jsonSuccess(message: 'Story updated successfully!', data: $input);
         } catch (Exception $exception) {
             DB::rollback();
 

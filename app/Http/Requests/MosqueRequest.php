@@ -17,7 +17,7 @@ class MosqueRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'masjid_name' => ['required', 'string', 'max:255'],
+            'masjid_name' => ['required', 'string', 'max:255', 'unique:mosques,masjid_name'],
             'address' => ['required', 'string', 'max:255'],
             'imame_name' => ['required', 'string', 'max:255'],
             'notice_board' => 'required',

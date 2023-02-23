@@ -58,7 +58,7 @@ class BlogServices extends BaseServices
                 'user_id' => $id,
             ]);
             $blog = Image::create([
-                'url' => cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath(),
+                'url' => $request->file('file')->store('blogs'),
                 'imageable_id' => $data->id,
                 'imageable_type' => \App\Models\Blog::class,
             ]);

@@ -6,6 +6,7 @@ use App\Models\prayer;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class prayerServices extends BaseServices
 {
@@ -124,14 +125,14 @@ class prayerServices extends BaseServices
         }
     }
 
-    public function prayerTime()
+    public function prayerTime($request)
     {
         DB::beginTransaction();
         try {
-            $data = new Client(['http://api.aladhan.com/v1/calendar']);
+            $data = Http::get("http://api.aladhan.com/v1/timingsByAddress?address={$request['address']}");
             DB::commit();
 
-            return self::jsonSuccess(message: 'prayer updated successfully!', data:$prayer);
+            return self::jsonSuccess(message: 'prayer updated successfully!', data:$data->json());
         } catch (Exception $exception) {
             DB::rollback();
 
