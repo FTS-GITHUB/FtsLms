@@ -10,6 +10,7 @@ return new class extends Migration
     {
         Schema::create('islamic_short_stories', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
             $table->text('islamic_short_stories');
             $table->timestamps();
         });

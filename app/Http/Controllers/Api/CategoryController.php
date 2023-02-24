@@ -77,7 +77,7 @@ class CategoryController
         try {
             $data = $this->categoryServices->destroy($category);
 
-            return self::jsonSuccess('delete record', data: $data);
+            return self::jsonSuccess('Record deleted', data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
