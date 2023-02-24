@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Permissions\Users\StoreUserRequest;
 use App\Http\Requests\Permissions\Users\UpdateUserRequest;
 use App\Http\Resources\Collections\Permissions\UsersCollection;
@@ -11,7 +10,6 @@ use App\Http\Resources\Permissions\UserResource;
 use App\Models\Image;
 use App\Models\User;
 use App\Traits\Jsonify;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -55,7 +53,7 @@ class UserController extends Controller
             $user->syncRoles($request->safe()->only('roles'));
 
             $user = Image::create([
-                'url' => cloudinary()->upload($request->file('avatar')->getRealPath())->getSecurePath(),
+                'url' => $request->file('avatar')->store('avatar'),
                 'imageable_id' => $user->id,
                 'imageable_type' => \App\Models\User::class,
 
@@ -103,7 +101,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $data = Image::where('imageable_id', $user->id)->first();
-        Cloudinary::destroy($data->imageable_id);
         $user->syncRoles();
 
         $user->delete();
@@ -111,8 +108,6 @@ class UserController extends Controller
 
         return self::jsonSuccess(message: 'User deleted successfully.');
     }
-
-   
 
     public function logout(Request $request)
     {

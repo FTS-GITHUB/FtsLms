@@ -62,7 +62,7 @@ Route::group([
     Route::apiResource('/prayers', PrayerController::class);
     Route::apiResource('/courses', CourseController::class);
 
-    Route::get('/prayer-time', [PrayerController::class, 'prayerTime']);
+    Route::post('/prayer-time', [PrayerController::class, 'prayerTime']);
 
     Route::apiResource('/students', StudentController::class);
     Route::apiResource('/welfares', WelfareController::class);
@@ -81,12 +81,14 @@ Route::group([
     Route::apiResource('/teams', TeamController::class);
     Route::apiResource('/marks', MarkController::class);
 
+    Route::apiResource('/course_assign_to_teachers', CourseAssignToTeacherController::class);
+
     Route::post('/stream-offer', [WebrtcStreamingController::class, 'makeStreamOffer']);
     Route::post('/stream-answer', [WebrtcStreamingController::class, 'makeStreamAnswer']);
     Route::get('/streaming/{streamId}', [WebrtcStreamingController::class, 'consumer']);
     Route::get('/streaming', [WebrtcStreamingController::class, 'index']);
 
-    Route::apiResource('/course_assign_to_teachers', CourseAssignToTeacherController::class);
+    Route::get('/permissions', [RoleController::class, 'permissions']);
 
     Route::get('/free_courses', [CourseController::class, 'freeCourse']);
     Route::get('/pro_courses', [CourseController::class, 'proCourse']);

@@ -118,7 +118,7 @@ class NewsletterController extends Controller
         //
     }
 
-    public function un_subscribe(NewsletterRequest $request)
+    public function un_subscribe(Request $request)
     {
         try {
             $subscription = Newsletter::where('email', $request->email)->first();

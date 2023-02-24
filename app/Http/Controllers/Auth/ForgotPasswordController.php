@@ -19,8 +19,8 @@ class ForgotPasswordController extends Controller
         if (! $user) {
             return response()->json([
                 'message' => 'This email does not exist in our records.',
-                'status_code' => 200,
-            ], 200);
+                'status_code' => 404,
+            ], 404);
         } else {
             $random = rand(111111, 999999);
             $user->varification_code = $random;

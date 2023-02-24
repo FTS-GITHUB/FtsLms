@@ -17,7 +17,8 @@ class IslamicShortStoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'islamic_short_stories' => ['required', 'string', 'max:255'],
+            'title' => ['required', 'string', 'unique:islamic_short_stories,title'],
+            'islamic_short_stories' => ['required'],
         ];
     }
 

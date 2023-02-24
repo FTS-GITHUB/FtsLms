@@ -10,6 +10,7 @@ use App\Http\Resources\Permissions\RoleResource;
 use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -23,7 +24,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        $data = (new RolesCollection(Role::with('permissions')->get()));
+        $data = (new RolesCollection(Role::get()));
 
         return self::jsonSuccess(message: 'Roles retreived successfully.', data: $data, code: 200);
     }
@@ -74,5 +75,16 @@ class RoleController extends Controller
         $role->delete();
 
         return self::jsonSuccess(message: 'Role deleted successfully.');
+    }
+
+    public function permissions()
+    {
+        try {
+            $permission = Permission::paginate(10);
+
+            return self::jsonSuccess(message: '', data : $permission);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }
