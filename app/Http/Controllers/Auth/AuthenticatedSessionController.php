@@ -19,7 +19,6 @@ class AuthenticatedSessionController extends Controller
             if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
                 return self::jsonError(message: 'Incorrect email or password.', code: 401);
             }
-
             $user = $request->user();
 
             $user->token = $user->createToken($request->token_name ?? 'authenticated');

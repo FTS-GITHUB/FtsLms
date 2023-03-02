@@ -92,11 +92,10 @@ Route::group([
 
     Route::get('/free_courses', [CourseController::class, 'freeCourse']);
     Route::get('/pro_courses', [CourseController::class, 'proCourse']);
+    Route::get('/state_change/{id}', [CourseController::class, 'stateChange']);
 
     Route::apiResource('/islamic_short_stories', IslamicShortStoryController::class);
-    Route::apiResource('/comments', CommentController::class)->only([
-        'index', 'store',
-    ]);
+    Route::apiResource('/comments', CommentController::class);
     Route::post('/replies', [CommentController::class, 'replies']);
     Route::post('/reacts/{id}', [CommentController::class, 'react']);
     Route::post('/dis-reacts/{id}', [CommentController::class, 'disReact']);

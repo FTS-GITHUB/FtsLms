@@ -55,8 +55,8 @@ class Handler extends ExceptionHandler
             return self::jsonError(message: 'This action is unauthorized.', code: 403);
         });
 
-        $this->renderable(function (QueryException $e, $request) {
-            return self::jsonError(message: 'Column not found', code: 500);
-        });
+        // $this->renderable(function (QueryException $e, $request) {
+        //     return self::jsonError(message: 'Column not found', code: 500);
+        // });
     }
 }

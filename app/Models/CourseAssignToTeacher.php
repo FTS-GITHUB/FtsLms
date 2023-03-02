@@ -11,17 +11,14 @@ class CourseAssignToTeacher extends Model
 
     public $guarded = [];
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public function teacher()
     {
         return $this->belongsTo(Teacher::class);
     }
 
-    public function department()
-    {
-        return $this->belongsTo(Department::class);
-    }
-
-    public function courses()
+    public function course()
     {
         return $this->belongsTo(Course::class);
     }

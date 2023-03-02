@@ -23,7 +23,7 @@ class CourseAssignToTeacherServices extends BaseServices
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model = $this->model->with(['department', 'teacher', 'courses'])->paginate(10);
+            $model = $this->model->with(['teacher', 'course', 'course.department'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -38,7 +38,7 @@ class CourseAssignToTeacherServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $data = CourseAssignToTeacher::with(['department', 'teacher', 'courses'])->find($courseAssignToTeacher);
+            $data = CourseAssignToTeacher::with(['teacher', 'course', 'course.department'])->find($courseAssignToTeacher);
             DB::commit();
 
             return self::jsonSuccess(data: $data);
@@ -54,7 +54,6 @@ class CourseAssignToTeacherServices extends BaseServices
         DB::beginTransaction();
         try {
             $data = CourseAssignToTeacher::create([
-                'department_id' => $request['department_id'],
                 'teacher_id' => $request['teacher_id'],
                 'course_id' => $request['course_id'],
                 'creadit' => $request['creadit'],

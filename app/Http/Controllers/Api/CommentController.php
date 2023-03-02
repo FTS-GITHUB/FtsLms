@@ -44,6 +44,28 @@ class CommentController extends Controller
         }
     }
 
+    public function show(Comment $comment)
+    {
+        try {
+            $data = $this->CommentServices->show($comment);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function update(Request $request, $comment)
+    {
+        try {
+            $data = $this->CommentServices->update($comment, $request);
+
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
     public function destroy(Comment $comment)
     {
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TeacherRequest;
+use App\Http\Requests\UpdateTeacherRequest;
 use App\Models\Teacher;
 use App\Services\TeacherServices;
 use App\Traits\Jsonify;
@@ -63,12 +64,12 @@ class TeacherController extends Controller
     {
     }
 
-    public function update(Request $request, Teacher $teacher)
+    public function update(UpdateTeacherRequest $request, Teacher $teacher)
     {
         try {
             $teacher = $this->teacherServices->update($teacher, $request);
 
-            return self::jsonSuccess(message: 'teacher saved successfully!', data: $teacher);
+            return self::jsonSuccess(message: 'teacher update successfully!', data: $teacher);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

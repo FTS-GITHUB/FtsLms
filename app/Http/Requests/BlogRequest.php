@@ -18,7 +18,7 @@ class BlogRequest extends FormRequest
     {
         return [
             'content' => ['required', 'string'],
-            'title' => ['required', 'string'],
+            'title' => ['required', 'string', 'unique:blogs,title'],
         ];
     }
 

@@ -19,7 +19,7 @@ class TeacherRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', 'unique:teachers,email,id'],
             'contact_no' => ['required', 'string', 'max:255'],
             'designation' => ['required', 'string', 'max:255'],
         ];

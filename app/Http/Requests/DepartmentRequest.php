@@ -18,7 +18,7 @@ class DepartmentRequest extends FormRequest
     {
         return [
             'department_code' => ['required', 'string', 'max:255'],
-            'department_name' => ['required', 'string', 'max:255'],
+            'department_name' => ['required', 'string', 'max:255', 'unique:departments,department_name,NULL,id'],
         ];
     }
 

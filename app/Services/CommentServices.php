@@ -23,7 +23,7 @@ class CommentServices extends BaseServices
         try {
             $model = $this->model;
 
-            $model = $this->model->with('user:id,name')->paginate(10);
+            $model = $this->model->with(['user:id,name', 'replies'])->paginate(10);
 
             DB::commit();
 
@@ -46,6 +46,36 @@ class CommentServices extends BaseServices
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $comment);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function show($comment)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = Comment::with('user:id,name')->find($comment);
+            DB::commit();
+
+            return self::jsonSuccess(message: 'prayer retrived successfully!', data:$data);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function update($comment, $request)
+    {
+        try {
+            $data = Comment::find($comment);
+            $data->update($request->all());
+
+            return self::jsonSuccess(message: '', data: $data);
         } catch (Exception $exception) {
             DB::rollback();
 

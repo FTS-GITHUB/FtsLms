@@ -34,7 +34,7 @@ class BookServices extends BaseServices
     {
         DB::beginTransaction();
         try {
-            $model = $this->model->with(['image', 'categories'])->paginate(10);
+            $model = $this->model->with(['image', 'category'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: 'Book saved successfully!', data: $model);

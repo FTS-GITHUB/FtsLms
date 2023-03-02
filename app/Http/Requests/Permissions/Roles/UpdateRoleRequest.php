@@ -6,7 +6,6 @@ use App\Traits\Jsonify;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\Rules\Password;
 
 class UpdateRoleRequest extends FormRequest
 {
@@ -18,7 +17,7 @@ class UpdateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string'],
+            'name' => ['string', 'unique:roles,name'],
             'permissions' => ['array', 'nullable'],
             'permissions.*' => ['exists:permissions,id'],
         ];
