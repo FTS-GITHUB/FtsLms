@@ -7,7 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CommentRequest extends FormRequest
+class UpdateTeacherRequest extends FormRequest
 {
     use Jsonify;
 
@@ -17,9 +17,11 @@ class CommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'blog_id' => ['required', 'unique:comments,blog_id'],
-            'body' => ['required', 'string', 'max:255'],
-
+            'name' => ['required', 'string', 'max:255'],
+            'address' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', 'unique:teachers,email,id'],
+            'contact_no' => ['required', 'string', 'max:255'],
+            'designation' => ['required', 'string', 'max:255'],
         ];
     }
 

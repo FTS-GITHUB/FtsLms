@@ -9,9 +9,11 @@ class Course extends Model
 {
     use HasFactory;
 
+    protected $hidden = ['created_at', 'updated_at'];
+
     public $guarded = [];
 
-    public function departments()
+    public function department()
     {
         return $this->belongsTo(Department::class);
     }

@@ -19,7 +19,7 @@ class StudentRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'max:255', 'unique:students,email,id'],
             'enrollment_date' => ['required', 'string', 'max:255'],
             'contact_no' => ['required', 'string'],
         ];

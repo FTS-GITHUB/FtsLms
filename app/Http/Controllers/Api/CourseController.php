@@ -90,7 +90,7 @@ class CourseController extends Controller
         try {
             $data = $this->courseServices->pro();
 
-            return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
+            return self::jsonSuccess(message: '', data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -101,7 +101,18 @@ class CourseController extends Controller
         try {
             $data = $this->courseServices->free();
 
-            return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
+            return self::jsonSuccess(message: '', data: $data);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function stateChange($id)
+    {
+        try {
+            $data = $this->courseServices->stateChange($id);
+
+            return self::jsonSuccess(data: $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }

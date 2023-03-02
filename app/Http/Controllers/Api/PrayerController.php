@@ -42,7 +42,7 @@ class PrayerController extends Controller
         try {
             $data = $this->prayerServices->add($request);
 
-            return self::jsonSuccess(data: $data);
+            return self::jsonSuccess('', $data);
         } catch (Exception $exception) {
             return self::jsonError($exception->getMessage());
         }
@@ -63,7 +63,7 @@ class PrayerController extends Controller
     {
     }
 
-    public function update(Request $request, Prayer $prayer)
+    public function update(UpdatePrayerRequest $request, Prayer $prayer)
     {
         try {
             $data = $this->prayerServices->update($prayer, $request);

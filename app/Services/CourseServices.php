@@ -34,7 +34,7 @@ class CourseServices extends BaseServices
         DB::beginTransaction();
         try {
             $model = $this->model;
-            $model = $this->model->with(['department', 'teachers', 'courses'])->paginate(10);
+            $model = $this->model->with(['department'])->paginate(10);
             DB::commit();
 
             return self::jsonSuccess(message: '', data: $model);
@@ -127,7 +127,7 @@ class CourseServices extends BaseServices
    {
        DB::beginTransaction();
        try {
-           $data = $course->delete();
+           $data = $course->with(['department'])->delete();
            DB::commit();
 
            return self::jsonSuccess(message: 'Course deleted successfully!', data: $data);
@@ -177,4 +177,32 @@ class CourseServices extends BaseServices
            return self::jsonError($exception->getMessage());
        }
    }
+
+    /**
+     * @param string $ change if course is paide to free and free to pro
+     */
+    public function stateChange($id)
+    {
+        DB::beginTransaction();
+        try {
+            $data = $this->model->find($id);
+
+            if ($data->status == 'free') {
+                $data->update([
+                    'status' => 'pro',
+                ]);
+            } else {
+                $data->update([
+                    'status' => 'free',
+                ]);
+            }
+            DB::commit();
+
+            return self::jsonSuccess(message: 'status changed successfully', data: $data);
+        } catch (Exception $exception) {
+            DB::rollback();
+
+            return self::jsonError($exception->getMessage());
+        }
+    }
 }

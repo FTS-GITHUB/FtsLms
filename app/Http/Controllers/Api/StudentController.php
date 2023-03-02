@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StudentRequest;
+use App\Http\Requests\UpdateStudentRequest;
 use App\Models\Student;
 use App\Services\StudentServices;
 use App\Traits\Jsonify;
@@ -73,7 +74,7 @@ class StudentController extends Controller
     {
     }
 
-    public function update(Request $request, Student $student)
+    public function update(UpdateStudentRequest $request, Student $student)
     {
         try {
             $data = $this->studentServices->update($student, $request);

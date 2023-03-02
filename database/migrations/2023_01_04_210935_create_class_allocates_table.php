@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('days');
             $table->string('from');
             $table->string('to');
-            $table->foreign('course_id')->references('id')->on('courses');
-            $table->foreign('department_id')->references('id')->on('departments');
+            $table->foreign('course_id')->references('id')->on('courses')->onDelete('cascade');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
             $table->timestamps();
         });
     }

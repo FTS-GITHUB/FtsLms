@@ -10,12 +10,14 @@ return new class extends Migration
     {
         Schema::create('comments', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id')->unsigned();
-            $table->integer('blog_id')->unsigned();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('blog_id');
             $table->integer('parent_id')->unsigned()->nullable();
             $table->text('body');
             $table->timestamps();
             $table->softDeletes();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('blog_id')->references('id')->on('blogs');
         });
     }
 };

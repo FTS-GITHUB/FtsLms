@@ -22,7 +22,7 @@ class ClassAllocateController extends Controller
         $this->classServices = $classServices;
     }
 
-    public function index(ClassRequest $request)
+    public function index(Request $request)
     {
         try {
             $data = $this->classServices->search($request);
@@ -37,7 +37,7 @@ class ClassAllocateController extends Controller
     {
     }
 
-    public function store(Request $request)
+    public function store(ClassRequest $request)
     {
         try {
             $data = $this->classServices->add($request->all());

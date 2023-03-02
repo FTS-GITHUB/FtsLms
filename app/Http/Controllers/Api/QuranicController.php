@@ -99,7 +99,6 @@ class QuranicController extends Controller
     public function update(QuranicRequest $request, Quranic $quranic)
     {
         try {
-            dd($request->all(), $quranic);
             $data = $this->quranicService->update($quranic, $request);
 
             return self::jsonSuccess(message: 'Data update successfully!', data:$data);
