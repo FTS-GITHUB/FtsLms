@@ -6,6 +6,7 @@ use App\Traits\Jsonify;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Spatie\Permission\Models\Role;
 
 class UpdateRoleRequest extends FormRequest
 {
@@ -17,7 +18,7 @@ class UpdateRoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['string', 'unique:roles,name'],
+            'name' => ['string', 'unique:'.Role::class, 'name'],
             'permissions' => ['array', 'nullable'],
             'permissions.*' => ['exists:permissions,id'],
         ];

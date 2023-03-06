@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryServices;
@@ -9,7 +10,7 @@ use App\Traits\Jsonify;
 use Exception;
 use Illuminate\Http\Request;
 
-class CategoryController
+class CategoryController extends Controller
 {
     use Jsonify;
 
@@ -17,6 +18,7 @@ class CategoryController
 
     public function __construct(CategoryServices $categoryServices)
     {
+        parent::__permissions('categories');
         $this->categoryServices = $categoryServices;
     }
 
