@@ -17,7 +17,10 @@ class RegisteredUserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $user = User::create([
-            'name' => $request->name,
+            'firstName' => $request->firstName,
+            'lastName' => $request->lastName,
+            'phone' => $request->phone,
+            'type' => $request->type,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

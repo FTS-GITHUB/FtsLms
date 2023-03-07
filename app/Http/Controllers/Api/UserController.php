@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -22,7 +23,7 @@ class UserController extends Controller
 
     public function __construct()
     {
-        parent::__permissions('users', 'logout', 'login');
+        parent::__permissions('users', 'logout');
     }
 
     public function index()
@@ -45,8 +46,10 @@ class UserController extends Controller
         DB::beginTransaction();
         try {
             $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
+                'firstName' => $request->firstName,
+                'lastName' => $request->lastName,
+                'phone' => $request->phone,
+                'type' => $request->type,
                 'password' => Hash::make($request->password),
             ]);
 
@@ -100,22 +103,56 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
-        $data = Image::where('imageable_id', $user->id)->first();
-        $user->syncRoles();
+        try {
+            $check = Role::where('name', 'super-admin')->first();
 
-        $user->delete();
-        $data->delete();
+            if ($check->name) {
+                return self::jsonError('super admin can not be deleted');
+            }
+            $data = Image::where('imageable_id', $user->id)->first();
+            $user->syncRoles();
 
-        return self::jsonSuccess(message: 'User deleted successfully.');
+            $user->delete();
+            $data->delete();
+
+            return self::jsonSuccess(message: 'User deleted successfully.');
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 
     public function logout(Request $request)
     {
-        $user = request()->user(); //or Auth::user()
+        try {
+            $user = request()->user(); //or Auth::user()
 
-        // Revoke current user token
-        $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
+            // Revoke current user token
+            $user->tokens()->where('id', $user->currentAccessToken()->id)->delete();
 
-        return self::jsonSuccess(message: 'User logged out successfully.', code: 200);
+            return self::jsonSuccess(message: 'User logged out successfully.', code: 200);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
+    }
+
+    public function user_state($id)
+    {
+        try {
+            // Get user
+            $user = User::firstWhere('id', $id);
+            if ($user->state == 'in-active') {
+                $user->update([
+                    'state' => 'active', // when state is in-active
+                ]);
+            } else {
+                $user->update([
+                    'state' => 'in-active', // when state is active
+                ]);
+            }
+
+            return self::jsonSuccess(message: 'User state '.$user->state.' change successfully.', code: 200);
+        } catch (Exception $exception) {
+            return self::jsonError($exception->getMessage());
+        }
     }
 }

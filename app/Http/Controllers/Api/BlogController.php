@@ -18,7 +18,7 @@ class BlogController extends Controller
 
     public function __construct(BlogServices $blogServices)
     {
-        parent::__permissions('blogs');
+        parent::__permissions('blogs', 'user-state-change');
         $this->blogServices = $blogServices;
     }
 

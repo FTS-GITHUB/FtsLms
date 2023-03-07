@@ -3,10 +3,10 @@
 namespace Database\Seeders;
 
 use App\Enums\Permissions\RoleTypeEnum;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
 {
@@ -19,9 +19,14 @@ class UserSeeder extends Seeder
     {
         $superAdmin = Role::firstOrCreate(['name' => RoleTypeEnum::SUPER_ADMIN]);
 
-        $user = User::factory()->create([
-            'name' => 'Super Admin',
+        $user = User::create([
+            'firstName' => 'Super ',
+            'lastName' => 'Admin',
+            'phone' => '1234556789',
+            'type' => 'Super Admin',
             'email' => 'superadmin@example.com',
+            'state' => 'active',
+            'password' => Hash::make('password'),
         ])->assignRole($superAdmin);
 
         $token = $user->createToken('auth')->plainTextToken;

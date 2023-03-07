@@ -59,6 +59,8 @@ return [
 
     'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
 
+    'dev_url' => env('DEV_URL', 'https://admin-madrasa.netlify.app'),
+
     'asset_url' => env('ASSET_URL'),
 
     /*
