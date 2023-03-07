@@ -24,7 +24,7 @@ class RoleController extends Controller
 
     public function index()
     {
-        $data = (new RolesCollection(Role::get()));
+        $data = (new RolesCollection(Role::with('permissions')->get()));
 
         return self::jsonSuccess(message: 'Roles retreived successfully.', data: $data, code: 200);
     }
@@ -35,8 +35,8 @@ class RoleController extends Controller
         try {
             $role = Role::create($request->safe()->only('name'));
 
-            if ($request->permission) {
-                $role->syncPermissions($request->permission);
+            if ($request->permissions) {
+                $role->syncPermissions($request->permissions);
             }
             DB::commit();
 
@@ -59,7 +59,7 @@ class RoleController extends Controller
             $role->update($request->safe()->only('name'));
 
             if ($request->safe()->has('permissions')) {
-                $role->syncPermissions($request->safe()->only('permissions'));
+                $role->syncPermissions($request->permissions);
             }
 
             return self::jsonSuccess(data: $role->load('permissions'), message: 'Role updated successfully.');

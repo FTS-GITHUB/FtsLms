@@ -21,7 +21,7 @@ class UpdateUserRequest extends FormRequest
 
         return [
             'name' => ['string', 'max:255'],
-            'email' => ['string', 'email', 'max:255', "unique:users,email,{$id},id,deleted_at,NULL"],
+            'email' => ['string', 'email', 'max:255'],
             'password' => [Password::defaults()],
             'roles' => ['array'],
         ];

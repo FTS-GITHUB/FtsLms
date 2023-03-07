@@ -20,4 +20,17 @@ return new class extends Migration
             $table->timestamps();
         });
     }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('blogs', function (Blueprint $table) {
+            $table->dropForeign('blogs_user_id_foreign');
+            $table->dropColumn('user_id');
+        });
+    }
 };

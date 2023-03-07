@@ -14,7 +14,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable , HasRoles, SoftDeletes;
 
-    protected $guard_name = 'sanctum';
+    // protected $guard_name = 'sanctum';
 
     /**
      * The attributes that are mass assignable.
@@ -22,11 +22,15 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'firstName',
+        'lastName',
+        'phone',
+        'type',
         'email',
         'password',
         'roles',
         'avatar',
+        'state',
     ];
 
     public function blogs()

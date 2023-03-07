@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         try {
-            if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+            if (! Auth::attempt(['email' => $request->email, 'password' => $request->password, 'state' => 'active'])) {
                 return self::jsonError(message: 'Incorrect email or password.', code: 401);
             }
             $user = $request->user();
@@ -31,6 +31,7 @@ class AuthenticatedSessionController extends Controller
 
     public function destroy(Request $request)
     {
+
         Auth::guard('web')->logout();
 
         $request->user()->tokens()->delete();

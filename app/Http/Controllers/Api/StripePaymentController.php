@@ -28,63 +28,63 @@ class StripePaymentController extends Controller
      */
     public function stripePost(Request $request)
     {
-        Stripe\stripe::setApiKey(env('STRIPE_SECRET'));
+        // Stripe\stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $customer = Stripe\Customer::create([
+        // $customer = Stripe\Customer::create([
 
-            'address' => [
+        //     'address' => [
 
-                'line1' => 'Virani Chowk',
+        //         'line1' => 'Virani Chowk',
 
-                'postal_code' => '360001',
+        //         'postal_code' => '360001',
 
-                'city' => 'Rajkot',
+        //         'city' => 'Rajkot',
 
-                'state' => 'GJ',
+        //         'state' => 'GJ',
 
-                'country' => 'IN',
+        //         'country' => 'IN',
 
-            ],
+        //     ],
 
-            'email' => 'demo@gmail.com',
+        //     'email' => 'demo@gmail.com',
 
-            'name' => 'Hardik Savani',
+        //     'name' => 'Hardik Savani',
 
-            'source' => $request->stripeToken,
+        //     'source' => $request->stripeToken,
 
-        ]);
+        // ]);
 
-        Stripe\Charge::create([
+        // Stripe\Charge::create([
 
-            'amount' => 100 * 100,
+        //     'amount' => 100 * 100,
 
-            'currency' => 'usd',
+        //     'currency' => 'usd',
 
-            'customer' => $customer->id,
+        //     'customer' => $customer->id,
 
-            'description' => 'Test payment from itsolutionstuff.com.',
+        //     'description' => 'Test payment from itsolutionstuff.com.',
 
-            'shipping' => [
+        //     'shipping' => [
 
-                'name' => 'Jenny Rosen',
+        //         'name' => 'Jenny Rosen',
 
-                'address' => [
+        //         'address' => [
 
-                    'line1' => '510 Townsend St',
+        //             'line1' => '510 Townsend St',
 
-                    'postal_code' => '98140',
+        //             'postal_code' => '98140',
 
-                    'city' => 'San Francisco',
+        //             'city' => 'San Francisco',
 
-                    'state' => 'CA',
+        //             'state' => 'CA',
 
-                    'country' => 'US',
+        //             'country' => 'US',
 
-                ],
+        //         ],
 
-            ],
+        //     ],
 
-        ]);
+        // ]);
 
         return self::jsonSuccess(message: 'Role updated successfully.');
     }

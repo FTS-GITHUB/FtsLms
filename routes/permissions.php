@@ -46,6 +46,8 @@ Route::group([
     Route::apiResource('/roles', RoleController::class);
     Route::apiResource('/books', BookController::class);
 
+    Route::post('/user-state-change/{id}', [UserController::class, 'user_state']);
+
     Route::post('/blog-approved/{id}', [BlogController::class, 'approved']);
     Route::post('/approved/{id}', [MarqueeController::class, 'approved']);
     Route::get('/pro-book', [BookController::class, 'proBook']);
